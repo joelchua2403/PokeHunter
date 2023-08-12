@@ -8,6 +8,7 @@ export const ApiProvider = ({ children }) => {
     const [pokeData, setPokeData] = useState([]);
     const [selectedPokemon, setSelectedPokemon] = useState([]);
     const [pokemonImage, setPokemonImage] = useState([]);
+    const [pokemonHP, setPokemonHP] = useState(0);
 
     const catchPokemon = () => {
         // Select a random Pokémon from the results
@@ -20,10 +21,12 @@ export const ApiProvider = ({ children }) => {
             .then((data) => {
                 setPokemonImage(data.sprites.front_default);
             });
+        
+        setPokemonHP(100);
     }
 
     return (
-        <ApiContext.Provider value={{pokeData, setPokeData, selectedPokemon, setSelectedPokemon, catchPokemon, pokemonImage, setPokemonImage}}>
+        <ApiContext.Provider value={{pokeData, setPokeData, selectedPokemon, setSelectedPokemon, catchPokemon, pokemonImage, setPokemonImage, pokemonHP, setPokemonHP}}>
             {children}
         </ApiContext.Provider>
     )

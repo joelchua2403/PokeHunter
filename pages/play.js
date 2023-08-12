@@ -4,7 +4,7 @@ import { useState, useEffect, useContext } from 'react';
 
 export default function Play() {
 
-    const { pokeData, setPokeData, selectedPokemon, setSelectedPokemon, catchPokemon, pokemonImage, setPokemonImage } = useContext(ApiContext);
+    const { pokeData, setPokeData, selectedPokemon, setSelectedPokemon, catchPokemon, pokemonImage, setPokemonImage, pokemonHP, setPokemonHP } = useContext(ApiContext);
 
 
     
@@ -14,8 +14,8 @@ export default function Play() {
       .then((data) => {
         setPokeData(data.results);
         // Select a random Pokémon from the results
-        const randomIndex = Math.floor(Math.random() * data.results.length);
-        setSelectedPokemon(data.results[randomIndex]);
+        // const randomIndex = Math.floor(Math.random() * data.results.length);
+        // setSelectedPokemon(data.results[randomIndex]);
     
     //   fetch(selectedPokemon.url)
     //     .then((response) => response.json())
@@ -28,22 +28,45 @@ export default function Play() {
 
   return (
     <View style={styles.container}>
-      {selectedPokemon ? (
-        <View>
-        <Text>Selected Pokémon: {selectedPokemon.name}</Text>
+      {pokemonImage && selectedPokemon ? (
+        <View style={styles.pokemonContainer}>
+        <Text style={styles.pokemonName}>{selectedPokemon.name}</Text>
         <Image source={{ uri: pokemonImage }} style={{ width: 200, height: 200 }} />
-        <Button title="Catch Pokémon" onPress={catchPokemon} />
+
+        {pokemonHP > 0 ? (
+            <Text style={styles.pokemonHP}>HP: {pokemonHP}</Text>
+        ) : (
+            null
+        )}
+       
         </View>
 
       ) : (
+
         <Text>Loading...</Text>
       )}
+
+    <Button title="Catch Pokémon" onPress={catchPokemon} />
     </View>
   );
 }
 
     const styles = StyleSheet.create({
         container: {
+            padding: 24,
+        },
+        pokemonName: {
+            fontSize: 18,
+            fontWeight: 'bold',
+        },
+        pokemonHP: {
+            fontSize: 18,
+            fontWeight: 'bold',
+        },
+        pokemonContainer: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: 24,
             padding: 24,
         },
     });
