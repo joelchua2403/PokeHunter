@@ -18,15 +18,14 @@ export const ApiProvider = ({ children }) => {
   };
 
   const showDefeat = () => {
-      return (
-        <View >
-          <Text>
-            You have defeated {selectedPokemon.name}!
-          </Text>
-          <Button title="Find another Pokémon" onPress={findPokemon} />
-        </View>
-      );
-    }
+    if (!selectedPokemon) {
+        return (
+            <View>
+            <Text>You have defeated {selectedPokemon.name}!</Text>
+            </View>
+        );
+    } 
+    };
   
 
   const onKick = () => {
@@ -46,6 +45,16 @@ export const ApiProvider = ({ children }) => {
         return
        }
       };
+
+ const onThrow = () => {
+        if( pokemonHP > 0 && selectedPokemon ) {
+            setPokemonHP(pokemonHP - 30);
+            checkDefeat();
+              } else {
+                return
+                }
+                };
+
   const findPokemon = () => {
     // Select a random Pokémon from the results
     const randomIndex = Math.floor(Math.random() * pokeData.length);
@@ -59,6 +68,7 @@ export const ApiProvider = ({ children }) => {
       });
 
     setPokemonHP(100);
+    setIsDefeated(false);
   };
 
   return (
@@ -79,7 +89,7 @@ export const ApiProvider = ({ children }) => {
         showDefeat,
         onKick,
         onPunch,
-
+        onThrow,
       }}
     >
       {children}

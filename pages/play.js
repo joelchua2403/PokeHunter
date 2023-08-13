@@ -21,6 +21,7 @@ export default function Play() {
     showDefeat,
     onKick,
     onPunch,
+    onThrow,
   } = useContext(ApiContext);
 
   useEffect(() => {
@@ -54,15 +55,16 @@ export default function Play() {
               source={{ uri: pokemonImage }}
               style={{ width: 200, height: 200 }}
             />
-
-            {pokemonHP > 0 && selectedPokemon ? (
+ 
+            {pokemonHP > 0 && selectedPokemon? (
               <Text style={styles.pokemonHP}>HP: {pokemonHP}</Text>
             ) : (
-
-               <Text>
-            You have defeated {selectedPokemon.name}!
-          </Text>
-            )}
+              null
+            ) 
+            }
+            {selectedPokemon.name && pokemonHP <= 0 && (
+              <Text>You have defeated {selectedPokemon.name}!</Text>
+            ) }
           </View>
         ) : (
           <Text>Loading...</Text>
@@ -70,12 +72,8 @@ export default function Play() {
       </View>
 
       <View style={styles.container}>
-        {selectedPokemon && pokemonHP <= 0? (
-           <Button title="Find another Pokémon" onPress={findPokemon} />
-         ) : (
-          <Button title="Find Pokémon" onPress={findPokemon} />
-        )}
-        <PokemonBattleScene onKick={onKick} onPunch={onPunch} />
+        <Button title="Find a Pokémon" onPress={findPokemon} />
+        <PokemonBattleScene onKick={onKick} onPunch={onPunch} onThrow={onThrow} findPokemon={findPokemon} />
       </View>
     </View>
   );
