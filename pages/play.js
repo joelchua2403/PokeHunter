@@ -1,8 +1,10 @@
-import { FlatList, StyleSheet, Text, View, Image, Button } from "react-native";
+import { FlatList, StyleSheet, Text, View, Image, Button, TouchableOpacity } from "react-native";
 import { ApiContext } from "../context/apiContext";
 import { useState, useEffect, useContext } from "react";
 import background from "../assets/background.jpg";
 import PokemonBattleScene from "../components/PokemonBattle";
+import { GyroContext } from "../context/gyroContext";
+import { Gyroscope } from "expo-sensors";
 
 export default function Play() {
   const {
@@ -24,6 +26,37 @@ export default function Play() {
     onThrow,
   } = useContext(ApiContext);
 
+  // const {
+  //   handleGyroscopeData,
+  //   onGyroKick,
+  //   onGyroPunch,
+  //   onGyroThrow,
+  // } = useContext(GyroContext);
+
+
+    const [{ x, y, z }, setData] = useState({
+      x: 0,
+      y: 0,
+      z: 0,
+    });
+    const [subscription, setSubscription] = useState(null);
+  
+    const _slow = () => Gyroscope.setUpdateInterval(1000);
+    const _fast = () => Gyroscope.setUpdateInterval(16);
+  
+    const _subscribe = () => {
+      setSubscription(
+        Gyroscope.addListener(gyroscopeData => {
+          setData(gyroscopeData);
+        })
+      );
+    };
+  
+    const _unsubscribe = () => {
+      subscription && subscription.remove();
+      setSubscription(null);
+    };
+
   useEffect(() => {
     fetch("https://pokeapi.co/api/v2/pokemon?limit=151")
       .then((response) => response.json())
@@ -41,7 +74,33 @@ export default function Play() {
       });
   }, []);
 
-  
+  useEffect(() => {
+    if (pokemonHP > 0 && selectedPokemon && (x > 1 || x < -1)) {
+      setPokemonHP(pokemonHP - 10);
+      checkDefeat();
+    }
+    if (pokemonHP > 0 && selectedPokemon && (y > 1 || y < -1)) {
+      setPokemonHP(pokemonHP - 20);
+      checkDefeat();
+    }
+    if (pokemonHP > 0 && selectedPokemon && (z > 1 || z < -1)) {
+      setPokemonHP(pokemonHP - 30);
+      checkDefeat();
+    }
+  }, [x, y, z]); // Add
+
+  useEffect(() => {
+    _subscribe();
+    return () => _unsubscribe();
+  }, []);
+
+  const onGyroPunch = () => {
+    if (pokemonHP > 0 && selectedPokemon && (x > 1 || x < -1)) {
+      setPokemonHP(pokemonHP - 10);
+      checkDefeat();
+    }
+  };
+
     
 
   return (
@@ -73,7 +132,28 @@ export default function Play() {
 
       <View style={styles.container}>
         <Button title="Find a Pokémon" onPress={findPokemon} />
-        <PokemonBattleScene onKick={onKick} onPunch={onPunch} onThrow={onThrow} findPokemon={findPokemon} />
+        <View style={styles.buttonContainer}>
+        {x > 1 || x < -1 ? <Text style={styles.text}>Punch</Text> : null}
+      {y > 1 || y < -1 ? <Text style={styles.text}>Kick</Text> : null}
+      {z > 1 || z < -1 ? <Text style={styles.text}>Throw</Text> : null}
+      </View>
+        <PokemonBattleScene onKick={onKick} onPunch={onGyroPunch} onThrow={onThrow} findPokemon={findPokemon} />
+        <Text>Gyroscope:</Text>
+      <Text >x: {x}</Text>
+      <Text >y: {y}</Text>
+      <Text >z: {z}</Text>
+     
+      <View >
+      <TouchableOpacity onPress={subscription ? _unsubscribe : _subscribe} style={styles.button}>
+          <Text>{subscription ? 'On' : 'Off'}</Text>
+        </TouchableOpacity>
+        <Button onPress={_slow} title="slow" />
+         
+       
+        <Button onPress={_fast} title="fast"/>
+       
+      </View>
+
       </View>
     </View>
   );
@@ -103,4 +183,16 @@ const styles = StyleSheet.create({
     zIndex: -1,
     position: "absolute",
   },
+  text: {
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  buttonContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+      marginTop: 20,
+      padding: 20,
+      backgroundColor: 'lightgrey',
+    },
 });

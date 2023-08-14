@@ -7,6 +7,7 @@ import Achievements from './pages/achievements';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { GyroProvider } from './context/gyroContext';
 
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
 
   return (
     <ApiProvider>
+      <GyroProvider>
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="Home" component={Home} />
@@ -23,6 +25,7 @@ export default function App() {
         <Tab.Screen name="Achievements" component={Achievements} />
       </Tab.Navigator>
     </NavigationContainer>
+    </GyroProvider>
     </ApiProvider>
   );
 }
