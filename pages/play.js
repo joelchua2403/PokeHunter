@@ -24,6 +24,9 @@ export default function Play() {
     onKick,
     onPunch,
     onThrow,
+    setCapturedPokemon,
+    capturedPokemon,
+    capturePokemon,
   } = useContext(ApiContext);
 
   // const {
@@ -137,7 +140,7 @@ export default function Play() {
       {y > 1 || y < -1 ? <Text style={styles.text}>Kick</Text> : null}
       {z > 1 || z < -1 ? <Text style={styles.text}>Throw</Text> : null}
       </View>
-        <PokemonBattleScene onKick={onKick} onPunch={onGyroPunch} onThrow={onThrow} findPokemon={findPokemon} />
+        <PokemonBattleScene onKick={onKick} onPunch={onGyroPunch} onThrow={onThrow} capturePokemon={capturePokemon} />
         <Text>Gyroscope:</Text>
       <Text >x: {x}</Text>
       <Text >y: {y}</Text>

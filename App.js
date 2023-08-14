@@ -22,7 +22,7 @@ export default function App() {
       <Tab.Navigator>
         <Tab.Screen name="Home" component={Home} />
         <Tab.Screen name="Play" component={Play} />
-        <Tab.Screen name="Achievements" component={Achievements} />
+        <Tab.Screen name="PokeDex" component={Achievements} />
       </Tab.Navigator>
     </NavigationContainer>
     </GyroProvider>

@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Button } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Button, Alert } from "react-native";
 
 export const ApiContext = createContext();
 
@@ -9,16 +9,30 @@ export const ApiProvider = ({ children }) => {
   const [pokemonImage, setPokemonImage] = useState([]);
   const [pokemonHP, setPokemonHP] = useState(0);
   const [isDefeated, setIsDefeated] = useState(false);
+  const [capturedPokemon, setCapturedPokemon] = useState([]);
 
   const checkDefeat = () => {
-    if (pokemonHP <= 0) {
+    if (pokemonHP <= 5) {
       setIsDefeated(true);
-      showDefeat();
     }
   };
 
+  const capturePokemon = () => {
+      // Define the capture rate (e.g., 0.5 for 50% chance)
+      const captureRate = 1 - (pokemonHP / 100);
+      const randomChance = Math.random(); // Generates a random number between 0 and 1
+  
+      // If randomChance is less than or equal to the capture rate, then capture is successful
+      if (randomChance <= captureRate) {
+        setCapturedPokemon([...capturedPokemon, selectedPokemon]);
+        Alert.alert("You have captured " + selectedPokemon.name + "!");
+      } else {
+        Alert.alert("Oh no! " + selectedPokemon.name + " escaped!");
+      }
+    }
+
   const showDefeat = () => {
-    if (!selectedPokemon) {
+    if (selectedPokemon) {
         return (
             <View>
             <Text>You have defeated {selectedPokemon.name}!</Text>
@@ -29,30 +43,19 @@ export const ApiProvider = ({ children }) => {
   
 
   const onKick = () => {
-   if( pokemonHP > 0 && selectedPokemon ) {
     setPokemonHP(pokemonHP - 20);
     checkDefeat();
-   } else {
-    return 
-   }
   };
 
   const onPunch = () => {
-    if( pokemonHP > 0 && selectedPokemon ) {
+ 
         setPokemonHP(pokemonHP - 10);
         checkDefeat();
-       } else {
-        return
-       }
       };
 
  const onThrow = () => {
-        if( pokemonHP > 0 && selectedPokemon ) {
             setPokemonHP(pokemonHP - 30);
             checkDefeat();
-              } else {
-                return
-                }
                 };
 
   const findPokemon = () => {
@@ -90,6 +93,9 @@ export const ApiProvider = ({ children }) => {
         onKick,
         onPunch,
         onThrow,
+        capturedPokemon,
+        setCapturedPokemon,
+        capturePokemon,
       }}
     >
       {children}

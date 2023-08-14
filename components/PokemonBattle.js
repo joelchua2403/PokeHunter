@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const PokemonBattleScene = ({ onKick, onPunch, onThrow, findPokemon}) => {
+const PokemonBattleScene = ({ onKick, onPunch, onThrow, capturePokemon}) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -16,8 +16,8 @@ const PokemonBattleScene = ({ onKick, onPunch, onThrow, findPokemon}) => {
         <TouchableOpacity style={styles.button} onPress={onThrow}>
           <Text style={styles.buttonText}>Throw</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={findPokemon}>
-          <Text style={styles.buttonText}>Run</Text>
+        <TouchableOpacity style={styles.button} onPress={capturePokemon}>
+          <Text style={styles.buttonText}>Capture</Text>
         </TouchableOpacity>
       </View>
     </View>

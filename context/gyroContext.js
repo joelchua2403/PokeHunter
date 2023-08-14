@@ -73,18 +73,18 @@ export const GyroProvider = ({ children }) => {
     //   }
     // };
   
-    useEffect(() => {
-      // Set the gyroscope update interval
-      Gyroscope.setUpdateInterval(1000);
+    // useEffect(() => {
+    //   // Set the gyroscope update interval
+    //   Gyroscope.setUpdateInterval(1000);
   
-      // Subscribe to gyroscope updates
-      const subscription = Gyroscope.addListener(handleGyroscopeData);
+    //   // Subscribe to gyroscope updates
+    //   const subscription = Gyroscope.addListener(handleGyroscopeData);
   
-      // Unsubscribe when the component unmounts
-      return () => {
-        subscription && subscription.remove();
-      };
-    }, []);
+    //   // Unsubscribe when the component unmounts
+    //   return () => {
+    //     subscription && subscription.remove();
+    //   };
+    // }, []);
   
     return (
         <GyroContext.Provider
@@ -93,7 +93,6 @@ export const GyroProvider = ({ children }) => {
             onGyroKick,
             onGyroThrow,
             onRun,
-            handleGyroscopeData,
         }}
         >
             {children}
