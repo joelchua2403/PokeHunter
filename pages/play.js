@@ -1,10 +1,19 @@
-import { FlatList, StyleSheet, Text, View, Image, Button, TouchableOpacity } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Button,
+  TouchableOpacity,
+} from "react-native";
 import { ApiContext } from "../context/apiContext";
 import { useState, useEffect, useContext } from "react";
 import background from "../assets/background.jpg";
 import PokemonBattleScene from "../components/PokemonBattle";
 import { GyroContext } from "../context/gyroContext";
 import { Gyroscope } from "expo-sensors";
+import question from "../assets/question.png";
 
 export default function Play() {
   const {
@@ -36,29 +45,28 @@ export default function Play() {
   //   onGyroThrow,
   // } = useContext(GyroContext);
 
+  const [{ x, y, z }, setData] = useState({
+    x: 0,
+    y: 0,
+    z: 0,
+  });
+  const [subscription, setSubscription] = useState(null);
 
-    const [{ x, y, z }, setData] = useState({
-      x: 0,
-      y: 0,
-      z: 0,
-    });
-    const [subscription, setSubscription] = useState(null);
-  
-    const _slow = () => Gyroscope.setUpdateInterval(1000);
-    const _fast = () => Gyroscope.setUpdateInterval(16);
-  
-    const _subscribe = () => {
-      setSubscription(
-        Gyroscope.addListener(gyroscopeData => {
-          setData(gyroscopeData);
-        })
-      );
-    };
-  
-    const _unsubscribe = () => {
-      subscription && subscription.remove();
-      setSubscription(null);
-    };
+  const _slow = () => Gyroscope.setUpdateInterval(1000);
+  const _fast = () => Gyroscope.setUpdateInterval(16);
+
+  const _subscribe = () => {
+    setSubscription(
+      Gyroscope.addListener((gyroscopeData) => {
+        setData(gyroscopeData);
+      })
+    );
+  };
+
+  const _unsubscribe = () => {
+    subscription && subscription.remove();
+    setSubscription(null);
+  };
 
   useEffect(() => {
     fetch("https://pokeapi.co/api/v2/pokemon?limit=151")
@@ -104,8 +112,6 @@ export default function Play() {
     }
   };
 
-    
-
   return (
     <View>
       <View>
@@ -117,46 +123,48 @@ export default function Play() {
               source={{ uri: pokemonImage }}
               style={{ width: 200, height: 200 }}
             />
- 
-            {pokemonHP > 0 && selectedPokemon? (
+
+            {pokemonHP > 0 && selectedPokemon ? (
               <Text style={styles.pokemonHP}>HP: {pokemonHP}</Text>
-            ) : (
-              null
-            ) 
-            }
+            ) : null}
             {selectedPokemon.name && pokemonHP <= 0 && (
               <Text>You have defeated {selectedPokemon.name}!</Text>
-            ) }
+            )}
           </View>
         ) : (
-          <Text>Loading...</Text>
+          <Image source={background} style={styles.background} />
         )}
       </View>
 
       <View style={styles.container}>
         <Button title="Find a Pokémon" onPress={findPokemon} />
         <View style={styles.buttonContainer}>
-        {x > 1 || x < -1 ? <Text style={styles.text}>Punch</Text> : null}
-      {y > 1 || y < -1 ? <Text style={styles.text}>Kick</Text> : null}
-      {z > 1 || z < -1 ? <Text style={styles.text}>Throw</Text> : null}
-      </View>
-        <PokemonBattleScene onKick={onKick} onPunch={onGyroPunch} onThrow={onThrow} capturePokemon={capturePokemon} />
+          {x > 1 || x < -1 ? <Text style={styles.text}>Punch</Text> : null}
+          {y > 1 || y < -1 ? <Text style={styles.text}>Kick</Text> : null}
+          {z > 1 || z < -1 ? <Text style={styles.text}>Throw</Text> : null}
+        </View>
+        <PokemonBattleScene
+          onKick={onKick}
+          onPunch={onPunch}
+          onThrow={onThrow}
+          capturePokemon={capturePokemon}
+        />
         <Text>Gyroscope:</Text>
-      <Text >x: {x}</Text>
-      <Text >y: {y}</Text>
-      <Text >z: {z}</Text>
-     
-      <View >
-      <TouchableOpacity onPress={subscription ? _unsubscribe : _subscribe} style={styles.button}>
-          <Text>{subscription ? 'On' : 'Off'}</Text>
-        </TouchableOpacity>
-        <Button onPress={_slow} title="slow" />
-         
-       
-        <Button onPress={_fast} title="fast"/>
-       
-      </View>
+        <Text>x: {x}</Text>
+        <Text>y: {y}</Text>
+        <Text>z: {z}</Text>
 
+        <View>
+          <TouchableOpacity
+            onPress={subscription ? _unsubscribe : _subscribe}
+            style={styles.button}
+          >
+            <Text>{subscription ? "On" : "Off"}</Text>
+          </TouchableOpacity>
+          <Button onPress={_slow} title="slow" />
+
+          <Button onPress={_fast} title="fast" />
+        </View>
       </View>
     </View>
   );
@@ -194,8 +202,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     justifyContent: "center",
     alignItems: "center",
-      marginTop: 20,
-      padding: 20,
-      backgroundColor: 'lightgrey',
-    },
+    marginTop: 20,
+    padding: 20,
+    backgroundColor: "lightgrey",
+  },
 });
