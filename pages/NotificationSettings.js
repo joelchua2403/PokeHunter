@@ -5,6 +5,7 @@ import {
   Platform,
   ImageBackground,
   TouchableOpacity,
+  Switch,
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import { Picker } from "@react-native-picker/picker";
@@ -33,6 +34,7 @@ export default function NotificationSettings({ navigation }) {
   const [shouldRepeat, setShouldRepeat] = useState(false);
   const [isScheduled, setIsScheduled] = useState(false);
   const [notificationId, setNotificationId] = useState(null);
+  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
 
   // Slider state
   const { sliderValue, setSliderValue } = useContext(SliderContext);
@@ -92,24 +94,38 @@ export default function NotificationSettings({ navigation }) {
         Sensitivty Level: {sliderValue.toFixed(0)}%
       </Text>
 
-      <Text style={{ marginBottom: 0 }}>
-        Adjust the sensitivity of your motion detector
-      </Text>
-      <Text style={{ marginTop: 30, fontSize: 20, fontWeight: "bold" }}>
-        Notification Settings
-      </Text>
+      <Text>Adjust the sensitivity of your motion detector</Text>
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: 20,
+          justifyContent: "space-between", // This will space them apart
+          paddingHorizontal: 20, // Add some padding to the sides
+        }}
+      >
+        <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+          Notification Settings
+        </Text>
+
+        <Switch
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          thumbColor={isNotificationsEnabled ? "#f5dd4b" : "#f4f3f4"}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={() =>
+            setIsNotificationsEnabled((prevState) => !prevState)
+          }
+          value={isNotificationsEnabled}
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
         }}
       >
         <Picker
           selectedValue={interval}
           style={{ height: 50, width: 100, marginTop: 0 }}
-          mode="dialog"
           onValueChange={(itemValue) => setInterval(itemValue)}
         >
           {Array.from({ length: 59 }, (_, i) => i + 1).map((number) => (
@@ -134,12 +150,21 @@ export default function NotificationSettings({ navigation }) {
 
       <Picker
         selectedValue={shouldRepeat}
-        style={{ height: 50, width: 300, marginBottom: 150, marginTop: 50 }}
+        style={{ height: 50, width: 300, marginBottom: 150, marginTop: 30 }}
         onValueChange={(itemValue) => setShouldRepeat(itemValue)}
       >
         <Picker.Item label="Do Not Repeat" value={false} />
         <Picker.Item label="Repeat" value={true} />
       </Picker>
+
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 20,
+        }}
+      ></View>
 
       <ImageBackground
         source={pokemonImage}
@@ -150,14 +175,14 @@ export default function NotificationSettings({ navigation }) {
           borderRadius: 40,
           overflow: "hidden",
           marginBottom: 20,
+          marginTop: 0,
         }}
       >
         <TouchableOpacity
           style={{
             backgroundColor: "rgba(0, 0, 0, 0.5)",
-            padding: 40,
             borderRadius: 5,
-            height: 100,
+            height: 150,
             alignItems: "center",
             justifyContent: "center",
           }}
@@ -167,7 +192,8 @@ export default function NotificationSettings({ navigation }) {
               intervalType,
               shouldRepeat,
               notificationId,
-              setNotificationId
+              setNotificationId,
+              isNotificationsEnabled
             );
             setIsScheduled(true);
           }}
@@ -187,8 +213,14 @@ async function schedulePushNotification(
   intervalType,
   shouldRepeat,
   notificationId,
-  setNotificationId
+  setNotificationId,
+  isNotificationsEnabled
 ) {
+  if (!isNotificationsEnabled) {
+    alert("Notifications are turned off. Please enable them to schedule.");
+    return;
+  }
+
   let seconds = interval;
 
   if (intervalType === "minutes") {
@@ -202,7 +234,6 @@ async function schedulePushNotification(
     return;
   }
 
-  // Cancel the existing notification if there's one
   if (notificationId) {
     await Notifications.cancelScheduledNotificationAsync(notificationId);
   }
@@ -249,8 +280,7 @@ async function registerForPushNotificationsAsync() {
       alert("Failed to get push token for push notification!");
       return;
     }
-    //token = (await Notifications.getExpoPushTokenAsync()).data;
-    //console.log(token);
+    token = (await Notifications.getExpoPushTokenAsync()).data;
   } else {
     alert("Must use physical device for Push Notifications");
   }

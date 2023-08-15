@@ -21,10 +21,7 @@ export default function App() {
             <Tab.Screen name="Home" component={Home} />
             <Tab.Screen name="Play" component={Play} />
             <Tab.Screen name="Achievements" component={Achievements} />
-            <Tab.Screen
-              name="Notification Settings"
-              component={NotificationSettings}
-            />
+            <Tab.Screen name="Settings" component={NotificationSettings} />
           </Tab.Navigator>
         </NavigationContainer>
       </SliderProvider>
