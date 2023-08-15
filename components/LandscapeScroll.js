@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 
 const scrollSpeed = 450
-export default function LandscapeScroll({x, name, image, HP, selectedPokemon, pokemonLocation}) {
+export default function LandscapeScroll({x, name, image, HP, selectedPokemon, pokemonLocation, hue}) {
     
     return(
         <View style = {styles.battleContainer}>
@@ -16,6 +16,8 @@ export default function LandscapeScroll({x, name, image, HP, selectedPokemon, po
           transform: [{ translateX: x * scrollSpeed / 2 }],
         }]}/>
 
+        {(hue > 0)?<Text style={styles.pokemonName}>{name} Attacked you! </Text>: null}
+        
         <View style={[styles.pokemonStats, {transform: [{ translateX: pokemonLocation * scrollSpeed + x * scrollSpeed}, {translateY: 40}]}]}>
 
         <Text style={styles.pokemonName}>{name}</Text>
@@ -32,8 +34,9 @@ export default function LandscapeScroll({x, name, image, HP, selectedPokemon, po
               source={{ uri: image }}
               style={{ width: 200, height: 200 }}
             />
- 
+
         </View>
+        <View style = {{position:"absolute", width: "100%", height: "100%", backgroundColor: `rgba(255, 0, 0, ${hue})` , zIndex: 10}}/>
             
         </View>
     )

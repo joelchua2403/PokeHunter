@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, Text, View, Image, Button, TouchableOpacity } from "react-native";
 import { ApiContext } from "../context/apiContext";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import background from "../assets/background.jpg";
 import PokemonBattleScene from "../components/PokemonBattle";
 import { GyroContext } from "../context/gyroContext";
@@ -125,13 +125,66 @@ export default function Play() {
     if (Math.abs(x + pokemonLocation) < 0.15){
       console.log("hit!");
       movePokemon();
+      startCountdown();
       return (true);
     }else {
       console.log("false");
       return (false);
     }
   }
-    
+
+  const [redHue, setRedHue] = useState(0);
+  const [attackIncoming, setAttackIncoming] =useState(5);
+
+  const intervalRef = useRef();
+  const countdownIntervalRef = useRef();
+
+  const startCountdown = () => {
+    setAttackIncoming(5);
+    clearInterval(countdownIntervalRef.current);
+    startCountdownInterval();
+  };
+
+  const stopCountdown = () => {
+    setAttackIncoming(5);
+    clearInterval(countdownIntervalRef.current);
+  }
+
+  const attacked = () => {
+    const animationDuration = 2000; // 2 seconds
+    const steps = 60; // Number of steps in the animation
+    const stepDuration = animationDuration / steps;
+    setRedHue(1);
+
+    let currentStep = 0;
+    intervalRef.current = setInterval(() => {
+      currentStep++;
+
+      if (currentStep >= steps) {
+        clearInterval(intervalRef.current);
+        setRedHue(0);
+      } else {
+        const progress = 1 - currentStep / steps;
+        setRedHue(progress);
+      }
+    }, stepDuration);
+  };
+
+  const startCountdownInterval = () => {
+    let currentStep = 5;
+    countdownIntervalRef.current = setInterval(() => {
+      if (currentStep > 0){
+        currentStep --;
+        setAttackIncoming(currentStep);
+        console.log(currentStep);
+      } else {
+        currentStep = 5;
+        setAttackIncoming(5);
+        attacked();
+      }
+    }, 1000); 
+  };
+
 
   return (
     <View>
@@ -160,16 +213,16 @@ export default function Play() {
           <Text>Loading...</Text>
         )}
       </View> */}
-      <LandscapeScroll x ={x.toFixed(2)} name = {selectedPokemon.name} image = {pokemonImage} HP ={pokemonHP} selectedPokemon={selectedPokemon} pokemonLocation= {pokemonLocation}/>
+      <LandscapeScroll x ={x.toFixed(2)} name = {selectedPokemon.name} image = {pokemonImage} HP ={pokemonHP} selectedPokemon={selectedPokemon} pokemonLocation= {pokemonLocation} hue= {redHue}/>
 
       <View style={styles.container}>
-        <Button title="Find a Pokémon" onPress={()=>{findPokemon(); movePokemon();}} />
+        <Button title="Find a Pokémon" onPress={()=>{findPokemon(); movePokemon(); startCountdown();}} />
         <View style={styles.buttonContainer}>
         {x > 1 || x < -1 ? <Text style={styles.text}>Punch</Text> : null}
       {y > 1 || y < -1 ? <Text style={styles.text}>Kick</Text> : null}
       {z > 1 || z < -1 ? <Text style={styles.text}>Throw</Text> : null}
       </View>
-        <PokemonBattleScene onKick={()=> {if(registerHit()){onKick()}}} onPunch={onGyroPunch} onThrow={()=> {if(registerHit()){onThrow()}}} capturePokemon={()=> {if(registerHit()){capturePokemon}}} />
+        <PokemonBattleScene onKick={()=> {if(registerHit()){onKick()}}} onPunch={onGyroPunch} onThrow={()=> {if(registerHit()){onThrow()}}} capturePokemon={()=> {if(registerHit()){capturePokemon()}}} />
         <Text>Gyroscope:</Text>
       <Text >x: {x}</Text>
       <Text >y: {y}</Text>
