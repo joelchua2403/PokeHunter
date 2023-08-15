@@ -8,24 +8,26 @@ import NotificationSettings from "./pages/NotificationSettings";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
+import SliderProvider from "./Slider/SliderProvider";
 export default function App() {
   const Stack = createStackNavigator();
   const Tab = createBottomTabNavigator();
 
   return (
     <ApiProvider>
-      <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen name="Home" component={Home} />
-          <Tab.Screen name="Play" component={Play} />
-          <Tab.Screen name="Achievements" component={Achievements} />
-          <Tab.Screen
-            name="Notification Settings"
-            component={NotificationSettings}
-          />
-        </Tab.Navigator>
-      </NavigationContainer>
+      <SliderProvider>
+        <NavigationContainer>
+          <Tab.Navigator>
+            <Tab.Screen name="Home" component={Home} />
+            <Tab.Screen name="Play" component={Play} />
+            <Tab.Screen name="Achievements" component={Achievements} />
+            <Tab.Screen
+              name="Notification Settings"
+              component={NotificationSettings}
+            />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </SliderProvider>
     </ApiProvider>
   );
 }
