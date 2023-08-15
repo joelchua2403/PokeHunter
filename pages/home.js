@@ -1,15 +1,22 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from "react-native";
+import logo from "../assets/logo.png";
 
 export default function Home() {
-    return (
-        <View style={styles.container}>
-        <Text>Home Screen</Text>
-        </View>
-    );
-    }
+  return (
+    <View style={styles.container}>
+      <Image source={logo} style={styles.logo}/>
+    </View>
+  );
+}
 
-    const styles = StyleSheet.create({
-        container: {
-            padding: 24,
-        },
-    });
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 24,
+  },
+  logo: {
+    width: "100%",
+    height: "40%",
+    resizeMode: "contain",
+  },
+});

@@ -1,10 +1,19 @@
-import { FlatList, StyleSheet, Text, View, Image, Button, TouchableOpacity } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Button,
+  TouchableOpacity,
+} from "react-native";
 import { ApiContext } from "../context/apiContext";
 import { useState, useEffect, useContext, useRef } from "react";
 import background from "../assets/background.jpg";
 import PokemonBattleScene from "../components/PokemonBattle";
 import { GyroContext } from "../context/gyroContext";
 import { Gyroscope } from "expo-sensors";
+import question from "../assets/question.png";
 import LandscapeScroll from "../components/LandscapeScroll";
 import { Accelerometer } from 'expo-sensors';
 
@@ -38,6 +47,13 @@ export default function Play() {
   //   onGyroThrow,
   // } = useContext(GyroContext);
 
+  const [{ x, y, z }, setData] = useState({
+    x: 0,
+    y: 0,
+    z: 0,
+  });
+  const [subscription, setSubscription] = useState(null);
+
 
   const [pokemonLocation, setPokemonLocation] = useState(Math.random() * 1.6 - 0.8);
   const [{ x, y, z }, setData] = useState({
@@ -53,10 +69,12 @@ export default function Play() {
   const _subscribe = () => {
     setSubscription(Accelerometer.addListener(setData));
     Accelerometer.setUpdateInterval(200);
+
   };
 
   const _unsubscribe = () => {
     subscription && subscription.remove();
+
     
     setSubscription(null);
   };
@@ -65,6 +83,7 @@ export default function Play() {
     _subscribe();
     return () => _unsubscribe();
   }, []);
+
 
   useEffect(() => {
     fetch("https://pokeapi.co/api/v2/pokemon?limit=151")
@@ -109,6 +128,7 @@ export default function Play() {
       checkDefeat();
     }
   };
+
 
   const movePokemon = () => {
     let randomValue;
@@ -198,19 +218,16 @@ export default function Play() {
               source={{ uri: pokemonImage }}
               style={{ width: 200, height: 200 }}
             />
- 
-            {pokemonHP > 0 && selectedPokemon? (
+
+            {pokemonHP > 0 && selectedPokemon ? (
               <Text style={styles.pokemonHP}>HP: {pokemonHP}</Text>
-            ) : (
-              null
-            ) 
-            }
+            ) : null}
             {selectedPokemon.name && pokemonHP <= 0 && (
               <Text>You have defeated {selectedPokemon.name}!</Text>
-            ) }
+            )}
           </View>
         ) : (
-          <Text>Loading...</Text>
+          <Image source={background} style={styles.background} />
         )}
       </View> */}
       <LandscapeScroll x ={x.toFixed(2)} name = {selectedPokemon.name} image = {pokemonImage} HP ={pokemonHP} selectedPokemon={selectedPokemon} pokemonLocation= {pokemonLocation} hue= {redHue}/>
@@ -218,6 +235,7 @@ export default function Play() {
       <View style={styles.container}>
         <Button title="Find a Pokémon" onPress={()=>{findPokemon(); movePokemon(); startCountdown();}} />
         <View style={styles.buttonContainer}>
+
         {x > 1 || x < -1 ? <Text style={styles.text}>Punch</Text> : null}
       {y > 1 || y < -1 ? <Text style={styles.text}>Kick</Text> : null}
       {z > 1 || z < -1 ? <Text style={styles.text}>Throw</Text> : null}
@@ -237,6 +255,18 @@ export default function Play() {
        
       </View>
 
+
+        <View>
+          <TouchableOpacity
+            onPress={subscription ? _unsubscribe : _subscribe}
+            style={styles.button}
+          >
+            <Text>{subscription ? "On" : "Off"}</Text>
+          </TouchableOpacity>
+          <Button onPress={_slow} title="slow" />
+
+          <Button onPress={_fast} title="fast" />
+        </View>
       </View>
     </View>
   );
@@ -274,8 +304,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     justifyContent: "center",
     alignItems: "center",
-      marginTop: 20,
-      padding: 20,
-      backgroundColor: 'lightgrey',
-    },
+    marginTop: 20,
+    padding: 20,
+    backgroundColor: "lightgrey",
+  },
 });
