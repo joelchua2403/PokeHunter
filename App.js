@@ -32,10 +32,10 @@ export default function App() {
             <Tab.Screen name="Settings" component={NotificationSettings} />
           </Tab.Navigator>
         </NavigationContainer>
-      </SliderProvider>
-
 
       </GyroProvider>
+      </SliderProvider>
+
     </ApiProvider>
   );
 }

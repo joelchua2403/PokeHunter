@@ -13,7 +13,6 @@ import background from "../assets/background.jpg";
 import PokemonBattleScene from "../components/PokemonBattle";
 import { GyroContext } from "../context/gyroContext";
 import { Gyroscope } from "expo-sensors";
-import question from "../assets/question.png";
 import LandscapeScroll from "../components/LandscapeScroll";
 import { Accelerometer } from 'expo-sensors';
 
@@ -55,16 +54,8 @@ export default function Play() {
   const [subscription, setSubscription] = useState(null);
 
 
-  const [pokemonLocation, setPokemonLocation] = useState(Math.random() * 1.6 - 0.8);
-  const [{ x, y, z }, setData] = useState({
-    x: 0,
-    y: 0,
-    z: 0,
-  });
-  const [subscription, setSubscription] = useState(null);
 
   const _slow = () => Accelerometer.setUpdateInterval(200);
-  const _fast = () => Accelerometer.setUpdateInterval(1000);
 
   const _subscribe = () => {
     setSubscription(Accelerometer.addListener(setData));
@@ -129,6 +120,7 @@ export default function Play() {
     }
   };
 
+  const [pokemonLocation, setPokemonLocation] = useState(Math.random() * 1.6 - 0.8);
 
   const movePokemon = () => {
     let randomValue;
@@ -265,7 +257,6 @@ export default function Play() {
           </TouchableOpacity>
           <Button onPress={_slow} title="slow" />
 
-          <Button onPress={_fast} title="fast" />
         </View>
       </View>
     </View>
