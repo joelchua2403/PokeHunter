@@ -5,6 +5,8 @@ import background from "../assets/background.jpg";
 import PokemonBattleScene from "../components/PokemonBattle";
 import { GyroContext } from "../context/gyroContext";
 import { Gyroscope } from "expo-sensors";
+import LandscapeScroll from "../components/LandscapeScroll";
+import { Accelerometer } from 'expo-sensors';
 
 export default function Play() {
   const {
@@ -37,28 +39,32 @@ export default function Play() {
   // } = useContext(GyroContext);
 
 
-    const [{ x, y, z }, setData] = useState({
-      x: 0,
-      y: 0,
-      z: 0,
-    });
-    const [subscription, setSubscription] = useState(null);
-  
-    const _slow = () => Gyroscope.setUpdateInterval(1000);
-    const _fast = () => Gyroscope.setUpdateInterval(16);
-  
-    const _subscribe = () => {
-      setSubscription(
-        Gyroscope.addListener(gyroscopeData => {
-          setData(gyroscopeData);
-        })
-      );
-    };
-  
-    const _unsubscribe = () => {
-      subscription && subscription.remove();
-      setSubscription(null);
-    };
+  const [pokemonLocation, setPokemonLocation] = useState(Math.random() * 1.6 - 0.8);
+  const [{ x, y, z }, setData] = useState({
+    x: 0,
+    y: 0,
+    z: 0,
+  });
+  const [subscription, setSubscription] = useState(null);
+
+  const _slow = () => Accelerometer.setUpdateInterval(200);
+  const _fast = () => Accelerometer.setUpdateInterval(1000);
+
+  const _subscribe = () => {
+    setSubscription(Accelerometer.addListener(setData));
+    Accelerometer.setUpdateInterval(200);
+  };
+
+  const _unsubscribe = () => {
+    subscription && subscription.remove();
+    
+    setSubscription(null);
+  };
+
+  useEffect(() => {
+    _subscribe();
+    return () => _unsubscribe();
+  }, []);
 
   useEffect(() => {
     fetch("https://pokeapi.co/api/v2/pokemon?limit=151")
@@ -77,20 +83,20 @@ export default function Play() {
       });
   }, []);
 
-  useEffect(() => {
-    if (pokemonHP > 0 && selectedPokemon && (x > 1 || x < -1)) {
-      setPokemonHP(pokemonHP - 10);
-      checkDefeat();
-    }
-    if (pokemonHP > 0 && selectedPokemon && (y > 1 || y < -1)) {
-      setPokemonHP(pokemonHP - 20);
-      checkDefeat();
-    }
-    if (pokemonHP > 0 && selectedPokemon && (z > 1 || z < -1)) {
-      setPokemonHP(pokemonHP - 30);
-      checkDefeat();
-    }
-  }, [x, y, z]); // Add
+  // useEffect(() => {
+  //   if (pokemonHP > 0 && selectedPokemon && (x > 1 || x < -1)) {
+  //     setPokemonHP(pokemonHP - 10);
+  //     checkDefeat();
+  //   }
+  //   if (pokemonHP > 0 && selectedPokemon && (y > 1 || y < -1)) {
+  //     setPokemonHP(pokemonHP - 20);
+  //     checkDefeat();
+  //   }
+  //   if (pokemonHP > 0 && selectedPokemon && (z > 1 || z < -1)) {
+  //     setPokemonHP(pokemonHP - 30);
+  //     checkDefeat();
+  //   }
+  // }, [x, y, z]); // Add
 
   useEffect(() => {
     _subscribe();
@@ -104,14 +110,36 @@ export default function Play() {
     }
   };
 
+  const movePokemon = () => {
+    let randomValue;
+
+    do {
+      randomValue = Math.random() * 1.6 - 0.8;
+    } while (randomValue < pokemonLocation + 0.3 && randomValue > pokemonLocation - 0.3);
+
+    setPokemonLocation(randomValue);
+
+  }
+
+  const registerHit = () => {
+    if (Math.abs(x + pokemonLocation) < 0.15){
+      console.log("hit!");
+      movePokemon();
+      return (true);
+    }else {
+      console.log("false");
+      return (false);
+    }
+  }
     
 
   return (
     <View>
-      <View>
+      {/* <View>
         <Image source={background} style={styles.background} />
         {pokemonImage && selectedPokemon ? (
           <View style={styles.pokemonContainer}>
+            <LandscapeScroll x ={x}/>
             <Text style={styles.pokemonName}>{selectedPokemon.name}</Text>
             <Image
               source={{ uri: pokemonImage }}
@@ -131,16 +159,17 @@ export default function Play() {
         ) : (
           <Text>Loading...</Text>
         )}
-      </View>
+      </View> */}
+      <LandscapeScroll x ={x.toFixed(2)} name = {selectedPokemon.name} image = {pokemonImage} HP ={pokemonHP} selectedPokemon={selectedPokemon} pokemonLocation= {pokemonLocation}/>
 
       <View style={styles.container}>
-        <Button title="Find a Pokémon" onPress={findPokemon} />
+        <Button title="Find a Pokémon" onPress={()=>{findPokemon(); movePokemon();}} />
         <View style={styles.buttonContainer}>
         {x > 1 || x < -1 ? <Text style={styles.text}>Punch</Text> : null}
       {y > 1 || y < -1 ? <Text style={styles.text}>Kick</Text> : null}
       {z > 1 || z < -1 ? <Text style={styles.text}>Throw</Text> : null}
       </View>
-        <PokemonBattleScene onKick={onKick} onPunch={onGyroPunch} onThrow={onThrow} capturePokemon={capturePokemon} />
+        <PokemonBattleScene onKick={()=> {if(registerHit()){onKick()}}} onPunch={onGyroPunch} onThrow={()=> {if(registerHit()){onThrow()}}} capturePokemon={()=> {if(registerHit()){capturePokemon}}} />
         <Text>Gyroscope:</Text>
       <Text >x: {x}</Text>
       <Text >y: {y}</Text>
@@ -152,8 +181,6 @@ export default function Play() {
         </TouchableOpacity>
         <Button onPress={_slow} title="slow" />
          
-       
-        <Button onPress={_fast} title="fast"/>
        
       </View>
 

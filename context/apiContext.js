@@ -6,7 +6,7 @@ export const ApiContext = createContext();
 export const ApiProvider = ({ children }) => {
   const [pokeData, setPokeData] = useState([]);
   const [selectedPokemon, setSelectedPokemon] = useState([]);
-  const [pokemonImage, setPokemonImage] = useState([]);
+  const [pokemonImage, setPokemonImage] = useState(null);
   const [pokemonHP, setPokemonHP] = useState(0);
   const [isDefeated, setIsDefeated] = useState(false);
   const [capturedPokemon, setCapturedPokemon] = useState([]);
