@@ -1,21 +1,23 @@
-import { StyleSheet, Text, View } from "react-native";
-import { useState, useEffect, useRef, useContext } from "react";
-import SliderContext from "../Slider/SliderContext";
+import { StyleSheet, Text, View, Image } from "react-native";
 
-// Slider state
+import logo from "../assets/logo.png";
 
 export default function Home() {
-  const { sliderValue, setSliderValue } = useContext(SliderContext);
   return (
     <View style={styles.container}>
-      <Text>Home Screen</Text>
-      <Text>{sliderValue}</Text>
+      <Image source={logo} style={styles.logo}/>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 24,
+  },
+  logo: {
+    width: "100%",
+    height: "40%",
+    resizeMode: "contain",
   },
 });
