@@ -40,14 +40,14 @@ export default function LandscapeScroll({x, name, image, HP, selectedPokemon, po
           { throwDetected && (
               <Image
                   source={throwimg}
-                  style={[styles.punchImage, {transform: [{ translateX: pokemonLocation * scrollSpeed + x * scrollSpeed }, {translateY: 40}]}]}
+                  style={[styles.punchImage, {transform: [{ translateX: pokemonLocation }, {translateY: 40}]}]}
               />
           )}
 
           { captureDetected && (
               <Image
                   source={capture}
-                  style={[styles.punchImage, {transform: [{ translateX: pokemonLocation * scrollSpeed + x * scrollSpeed }, {translateY: 40}]}]}
+                  style={[styles.punchImage, {transform: [{ translateX: pokemonLocation }, {translateY: 40}]}]}
               />
           )}
 

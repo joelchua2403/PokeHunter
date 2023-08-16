@@ -8,6 +8,7 @@ import {
   Dimensions,
   Pressable,
   ImageBackground,
+  Button,
 } from "react-native";
 import { useContext } from "react";
 import { ApiContext } from "../context/apiContext";
@@ -105,12 +106,17 @@ function PokemonDetailScreen({ route }) {
   let id = route.params.id;
   const { width, height } = Dimensions.get("window"); // Get the screen dimensions
 
+  const getItemLayout = (data, index) => {
+    return { length: width, offset: width * index, index };
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
         data={pokemonList}
         initialScrollIndex={id}
         keyExtractor={(item, index) => index.toString()}
+        getItemLayout={getItemLayout}
         renderItem={({ item, index }) => (
           <View style={[styles.pokemonItem, { width, height }]}>
             <View style={styles.header}>
@@ -141,8 +147,25 @@ function PokemonDetailScreen({ route }) {
 export default function Achievements() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Caught Pokémon" component={PokedexGlanceScreen} />
-      <Stack.Screen name="Detail" component={PokemonDetailScreen} />
+      <Stack.Screen
+        name="Caught Pokémon"
+        component={PokedexGlanceScreen}
+        options={{
+          headerLeft: null,
+        }}
+      />
+      <Stack.Screen
+        name="Detail"
+        component={PokemonDetailScreen}
+        options={{
+          headerShown: true,
+          navigationOptions: {
+            header: ({ goBack }) => ({
+              left: <Left onPress={goBack} />,
+            }),
+          },
+        }}
+      />
     </Stack.Navigator>
   );
 }
