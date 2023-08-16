@@ -4,10 +4,10 @@ import {
   Text,
   View,
   Image,
-  Button,
   TouchableOpacity,
   Vibration,
 } from "react-native";
+import { Button } from "react-native-paper";
 import { ApiContext } from "../context/apiContext";
 import { useState, useEffect, useContext, useRef } from "react";
 import background from "../assets/background.jpg";
@@ -15,10 +15,10 @@ import PokemonBattleScene from "../components/PokemonBattle";
 import { GyroContext } from "../context/gyroContext";
 import { Gyroscope } from "expo-sensors";
 import LandscapeScroll from "../components/LandscapeScroll";
-import { Accelerometer } from 'expo-sensors';
+import { Accelerometer } from "expo-sensors";
 import punch from "../assets/punch.png";
 
-export default function Play() {
+export default function Play({ navigation }) {
   const {
     pokeData,
     setPokeData,
@@ -61,20 +61,16 @@ export default function Play() {
   });
   const [subscription, setSubscription] = useState(null);
 
-
-
   const _slow = () => Accelerometer.setUpdateInterval(200);
 
   const _subscribe = () => {
     setSubscription(Accelerometer.addListener(setData));
     Accelerometer.setUpdateInterval(200);
-
   };
 
   const _unsubscribe = () => {
     subscription && subscription.remove();
 
-    
     setSubscription(null);
   };
 
@@ -82,7 +78,6 @@ export default function Play() {
     _subscribe();
     return () => _unsubscribe();
   }, []);
-
 
   useEffect(() => {
     fetch("https://pokeapi.co/api/v2/pokemon?limit=151")
@@ -121,35 +116,42 @@ export default function Play() {
     return () => _unsubscribe();
   }, []);
 
-
-  const [pokemonLocation, setPokemonLocation] = useState(Math.random() * 1.6 - 0.8);
+  const [pokemonLocation, setPokemonLocation] = useState(
+    Math.random() * 1.6 - 0.8
+  );
 
   const movePokemon = () => {
     let randomValue;
 
     do {
       randomValue = Math.random() * 1.6 - 0.8;
-    } while (randomValue < pokemonLocation + 0.3 && randomValue > pokemonLocation - 0.3);
+    } while (
+      randomValue < pokemonLocation + 0.3 &&
+      randomValue > pokemonLocation - 0.3
+    );
 
     setPokemonLocation(randomValue);
-
-  }
+  };
 
   const registerHit = () => {
-    if (Math.abs(x + pokemonLocation) < 0.15){
+    if (Math.abs(x + pokemonLocation) < 0.15) {
       console.log("hit!");
       setTimeout(() => {
-      movePokemon()
+        movePokemon();
       }, 800);
       startCountdown();
-      return (true);
-    }else {
+      return true;
+    } else {
       console.log("false");
-      return (false);
+      return false;
     }
-  }
+  };
 
   const [redHue, setRedHue] = useState(0);
+
+  
+
+
 
 
   const intervalRef = useRef();
@@ -161,7 +163,6 @@ export default function Play() {
     startCountdownInterval();
   };
 
- 
 
   const attacked = () => {
     const animationDuration = 2000; // 2 seconds
@@ -186,8 +187,8 @@ export default function Play() {
   const startCountdownInterval = () => {
     let currentStep = 5;
     countdownIntervalRef.current = setInterval(() => {
-      if (currentStep > 0){
-        currentStep --;
+      if (currentStep > 0) {
+        currentStep--;
         setAttackIncoming(currentStep);
         console.log(currentStep);
       } else {
@@ -196,9 +197,8 @@ export default function Play() {
         attacked();
         Vibration.vibrate(500);
       }
-    }, 1000); 
+    }, 1000);
   };
-
 
   return (
     <View>
@@ -224,29 +224,59 @@ export default function Play() {
           <Image source={background} style={styles.background} />
         )}
       </View> */}
+
       
       <LandscapeScroll x ={x.toFixed(2)} name = {selectedPokemon.name} image = {pokemonImage} HP ={pokemonHP} selectedPokemon={selectedPokemon} pokemonLocation= {pokemonLocation} hue= {redHue}/>
-    
+
 
       <View style={styles.container}>
-        <Button title="Find a Pokémon" onPress={()=>{findPokemon(); movePokemon(); startCountdown();}} />
-        <View style={styles.buttonContainer}>
-      </View>
-        <PokemonBattleScene onKick={()=> {if(registerHit()){onKick()}}} onPunch={()=> {if(registerHit()){onPunch()}}} onThrow={()=> {if(registerHit()){onThrow()}}} capturePokemon={()=> {if(registerHit()){capturePokemon()}}} />
+        <Button
+          buttonColor="darkkhaki"
+          labelStyle={{ fontSize: 19 }}
+          icon="paw"
+          onPress={() => {
+            findPokemon();
+            movePokemon();
+            startCountdown();
+          }}
+        >
+          <Text style={{ fontSize: 17 }}>Find a Pokémon</Text>
+        </Button>
+        <PokemonBattleScene
+          onKick={() => {
+            if (registerHit()) {
+              onKick();
+            }
+          }}
+          onPunch={() => {
+            if (registerHit()) {
+              onPunch();
+            }
+          }}
+          onThrow={() => {
+            if (registerHit()) {
+              onThrow();
+            }
+          }}
+          capturePokemon={() => {
+            if (registerHit()) {
+              capturePokemon();
+            }
+          }}
+        />
+        <Button
+          contentStyle={{ padding: 5 }}
+          labelStyle={{ fontSize: 22 }}
+          icon="home"
+          textColor="dodgerblue"
+          onPress={() => navigation.navigate("HomeTabs")}
+        >
+          <Text style={{ fontSize: 15 }}>BACK TO HOME</Text>
+        </Button>
         <Text>Gyroscope:</Text>
-      <Text >x: {x}</Text>
-      <Text >y: {y}</Text>
-      <Text >z: {z}</Text>
-     
-      <View >
-      <TouchableOpacity onPress={subscription ? _unsubscribe : _subscribe} style={styles.button}>
-          <Text>{subscription ? 'On' : 'Off'}</Text>
-        </TouchableOpacity>
-        <Button onPress={_slow} title="slow" />
-         
-       
-      </View>
-
+        <Text>x: {x}</Text>
+        <Text>y: {y}</Text>
+        <Text>z: {z}</Text>
 
         <View>
           <TouchableOpacity
@@ -256,7 +286,16 @@ export default function Play() {
             <Text>{subscription ? "On" : "Off"}</Text>
           </TouchableOpacity>
           <Button onPress={_slow} title="slow" />
+        </View>
 
+        <View>
+          <TouchableOpacity
+            onPress={subscription ? _unsubscribe : _subscribe}
+            style={styles.button}
+          >
+            <Text>{subscription ? "On" : "Off"}</Text>
+          </TouchableOpacity>
+          <Button onPress={_slow} title="slow" />
         </View>
       </View>
     </View>
@@ -265,8 +304,9 @@ export default function Play() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
+    padding: 20,
     height: "100%",
+    backgroundColor: "gainsboro",
   },
   pokemonName: {
     fontSize: 18,
@@ -303,5 +343,13 @@ const styles = StyleSheet.create({
     width: "30%",
     height: "20%",
     resizeMode: "center",
-    },
+  },
+  glancepanel: {
+    flexDirection: "row",
+    borderWidth: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 50,
+    margin: 10,
+  },
 });
