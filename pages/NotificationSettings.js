@@ -12,6 +12,7 @@ import { Picker } from "@react-native-picker/picker";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import SliderContext from "../Slider/SliderContext";
+import BackgroundSettingsContext from "../Slider/BackgroundSettingsContext";
 
 const pokemonImage = require("../assets/pokemon.jpeg");
 
@@ -38,6 +39,10 @@ export default function NotificationSettings({ navigation }) {
 
   // Slider state
   const { sliderValue, setSliderValue } = useContext(SliderContext);
+  // Slider state
+  const { backgroundValue, setBackgroundValue } = useContext(
+    BackgroundSettingsContext
+  );
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) =>
@@ -150,7 +155,7 @@ export default function NotificationSettings({ navigation }) {
 
       <Picker
         selectedValue={shouldRepeat}
-        style={{ height: 50, width: 300, marginBottom: 150, marginTop: 30 }}
+        style={{ height: 50, width: 300, marginBottom: 150, marginTop: 100 }}
         onValueChange={(itemValue) => setShouldRepeat(itemValue)}
       >
         <Picker.Item label="Do Not Repeat" value={false} />

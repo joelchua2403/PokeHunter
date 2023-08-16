@@ -8,7 +8,10 @@ import NotificationSettings from "./pages/NotificationSettings";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+//Settings
 import SliderProvider from "./Slider/SliderProvider";
+import BackgroundSettingsProvider from "./Slider/BackgroundSettingsProvider.js";
+//
 import Icon from "react-native-vector-icons/Ionicons";
 import { GyroProvider } from "./context/gyroContext";
 import pokemon from "./assets/pokemon.jpeg";
@@ -77,15 +80,16 @@ function PlayTabs() {
 
 export default function App() {
   return (
-    <ApiProvider>
-      <SliderProvider>
-        <GyroProvider>
-          <NavigationContainer>
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="HomeTabs" component={HomeTabs} />
-              <Stack.Screen name="PlayTabs" component={PlayTabs} />
-            </Stack.Navigator>
-            {/* <Tab.Navigator>
+    <BackgroundSettingsProvider>
+      <ApiProvider>
+        <SliderProvider>
+          <GyroProvider>
+            <NavigationContainer>
+              <Stack.Navigator screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="HomeTabs" component={HomeTabs} />
+                <Stack.Screen name="PlayTabs" component={PlayTabs} />
+              </Stack.Navigator>
+              {/* <Tab.Navigator>
               <Tab.Screen
                 name="Home"
                 component={Home}
@@ -127,10 +131,11 @@ export default function App() {
                 }}
               />
             </Tab.Navigator> */}
-          </NavigationContainer>
-        </GyroProvider>
-      </SliderProvider>
-    </ApiProvider>
+            </NavigationContainer>
+          </GyroProvider>
+        </SliderProvider>
+      </ApiProvider>
+    </BackgroundSettingsProvider>
   );
 }
 
