@@ -6,6 +6,7 @@ import {
   Image,
   Button,
   TouchableOpacity,
+  Vibration,
 } from "react-native";
 import { ApiContext } from "../context/apiContext";
 import { useState, useEffect, useContext, useRef } from "react";
@@ -193,6 +194,7 @@ export default function Play() {
         currentStep = 5;
         setAttackIncoming(5);
         attacked();
+        Vibration.vibrate(500);
       }
     }, 1000); 
   };
