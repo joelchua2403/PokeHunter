@@ -5,6 +5,7 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Vibration,
 } from "react-native";
 import { Button } from "react-native-paper";
 import { ApiContext } from "../context/apiContext";
@@ -35,9 +36,15 @@ export default function Play({ navigation }) {
     onKick,
     onPunch,
     onThrow,
-    setCapturedPokemon,
-    capturedPokemon,
     capturePokemon,
+    capturedPokemon,
+    setCapturedPokemon,
+    captured,
+    setCaptured,
+    stopCountdown,
+    attackIncoming,
+    setAttackIncoming,
+    countdownIntervalRef
   } = useContext(ApiContext);
 
   // const {
@@ -141,10 +148,14 @@ export default function Play({ navigation }) {
   };
 
   const [redHue, setRedHue] = useState(0);
-  const [attackIncoming, setAttackIncoming] = useState(5);
+
+  
+
+
+
 
   const intervalRef = useRef();
-  const countdownIntervalRef = useRef();
+  
 
   const startCountdown = () => {
     setAttackIncoming(5);
@@ -152,10 +163,6 @@ export default function Play({ navigation }) {
     startCountdownInterval();
   };
 
-  const stopCountdown = () => {
-    setAttackIncoming(5);
-    clearInterval(countdownIntervalRef.current);
-  };
 
   const attacked = () => {
     const animationDuration = 2000; // 2 seconds
@@ -188,6 +195,7 @@ export default function Play({ navigation }) {
         currentStep = 5;
         setAttackIncoming(5);
         attacked();
+        Vibration.vibrate(500);
       }
     }, 1000);
   };
@@ -216,15 +224,10 @@ export default function Play({ navigation }) {
           <Image source={background} style={styles.background} />
         )}
       </View> */}
-      <LandscapeScroll
-        x={x.toFixed(2)}
-        name={selectedPokemon.name}
-        image={pokemonImage}
-        HP={pokemonHP}
-        selectedPokemon={selectedPokemon}
-        pokemonLocation={pokemonLocation}
-        hue={redHue}
-      />
+
+      
+      <LandscapeScroll x ={x.toFixed(2)} name = {selectedPokemon.name} image = {pokemonImage} HP ={pokemonHP} selectedPokemon={selectedPokemon} pokemonLocation= {pokemonLocation} hue= {redHue}/>
+
 
       <View style={styles.container}>
         <Button
