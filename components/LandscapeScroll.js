@@ -11,7 +11,7 @@ import { ApiContext } from '../context/apiContext';
 const scrollSpeed = 450
 export default function LandscapeScroll({x, name, image, HP, selectedPokemon, pokemonLocation, hue}) {
 
-  const {punchDetected, kickDetected, throwDetected, captureDetected} = useContext(ApiContext);
+  const {punchDetected, kickDetected, throwDetected, captureDetected, captured} = useContext(ApiContext);
     
     return(
         <View style = {styles.battleContainer}>
@@ -57,6 +57,8 @@ export default function LandscapeScroll({x, name, image, HP, selectedPokemon, po
         
         <View style={[styles.pokemonStats, {transform: [{ translateX: pokemonLocation * scrollSpeed + x * scrollSpeed}, {translateY: 40}]}]}>
 
+        {!captured && (
+          <View>
         <Text style={styles.pokemonName}>{name}</Text>
             {HP > 0 && selectedPokemon? (
               <Text style={styles.pokemonHP}>HP: {HP}</Text>
@@ -71,6 +73,8 @@ export default function LandscapeScroll({x, name, image, HP, selectedPokemon, po
               source={{ uri: image }}
               style={{ width: 200, height: 200 }}
             />
+            </View>
+        )}
 
         </View>
         <View style = {{position:"absolute", width: "100%", height: "100%", backgroundColor: `rgba(255, 0, 0, ${hue})` , zIndex: 10}}/>

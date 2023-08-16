@@ -35,9 +35,15 @@ export default function Play() {
     onKick,
     onPunch,
     onThrow,
-    setCapturedPokemon,
-    capturedPokemon,
     capturePokemon,
+    capturedPokemon,
+    setCapturedPokemon,
+    captured,
+    setCaptured,
+    stopCountdown,
+    attackIncoming,
+    setAttackIncoming,
+    countdownIntervalRef
   } = useContext(ApiContext);
 
   // const {
@@ -143,10 +149,10 @@ export default function Play() {
   }
 
   const [redHue, setRedHue] = useState(0);
-  const [attackIncoming, setAttackIncoming] =useState(5);
+
 
   const intervalRef = useRef();
-  const countdownIntervalRef = useRef();
+  
 
   const startCountdown = () => {
     setAttackIncoming(5);
@@ -154,10 +160,7 @@ export default function Play() {
     startCountdownInterval();
   };
 
-  const stopCountdown = () => {
-    setAttackIncoming(5);
-    clearInterval(countdownIntervalRef.current);
-  }
+ 
 
   const attacked = () => {
     const animationDuration = 2000; // 2 seconds
@@ -219,7 +222,9 @@ export default function Play() {
           <Image source={background} style={styles.background} />
         )}
       </View> */}
+      
       <LandscapeScroll x ={x.toFixed(2)} name = {selectedPokemon.name} image = {pokemonImage} HP ={pokemonHP} selectedPokemon={selectedPokemon} pokemonLocation= {pokemonLocation} hue= {redHue}/>
+    
 
       <View style={styles.container}>
         <Button title="Find a Pokémon" onPress={()=>{findPokemon(); movePokemon(); startCountdown();}} />

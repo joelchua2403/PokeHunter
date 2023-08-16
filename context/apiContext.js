@@ -7,6 +7,7 @@ import {
   Button,
   Alert,
 } from "react-native";
+import { useRef } from "react";
 
 export const ApiContext = createContext();
 
@@ -16,11 +17,15 @@ export const ApiProvider = ({ children }) => {
   const [pokemonImage, setPokemonImage] = useState(null);
   const [pokemonHP, setPokemonHP] = useState(0);
   const [isDefeated, setIsDefeated] = useState(false);
-  const [capturedPokemon, setCapturedPokemon] = useState([]);
+    const [capturedPokemon, setCapturedPokemon] = useState([]);
+ const [captured, setCaptured] = useState(false);
   const [punchDetected, setPunchDetected] = useState(false);
   const [kickDetected, setKickDetected] = useState(false);
   const [throwDetected, setThrowDetected] = useState(false);
   const [captureDetected, setCaptureDetected] = useState(false);
+  const [attackIncoming, setAttackIncoming] =useState(5);
+
+  const countdownIntervalRef = useRef();
 
   const checkDefeat = () => {
     if (pokemonHP <= 5) {
@@ -40,6 +45,9 @@ export const ApiProvider = ({ children }) => {
     // If randomChance is less than or equal to the capture rate, then capture is successful
     if (randomChance <= captureRate) {
       setCapturedPokemon([...capturedPokemon, selectedPokemon]);
+        setCaptured(true);
+        setPokemonHP(100);
+        stopCountdown();
       Alert.alert("You have captured " + selectedPokemon.name + "!");
     } else {
       Alert.alert("Oh no! " + selectedPokemon.name + " escaped!");
@@ -99,7 +107,13 @@ export const ApiProvider = ({ children }) => {
 
     setPokemonHP(100);
     setIsDefeated(false);
+    setCaptured(false);
   };
+
+  const stopCountdown = () => {
+    setAttackIncoming(5);
+    clearInterval(countdownIntervalRef.current);
+  }
 
   return (
     <ApiContext.Provider
@@ -127,6 +141,11 @@ export const ApiProvider = ({ children }) => {
         kickDetected,
         throwDetected,
         captureDetected,
+        attackIncoming,
+        setAttackIncoming,
+        stopCountdown,
+        countdownIntervalRef,
+        captured,
       }}
     >
       {children}
