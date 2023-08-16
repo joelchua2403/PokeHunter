@@ -17,6 +17,7 @@ import { Gyroscope } from "expo-sensors";
 import LandscapeScroll from "../components/LandscapeScroll";
 import { Accelerometer } from "expo-sensors";
 import punch from "../assets/punch.png";
+import HapticFeedback from 'react-native-haptic-feedback';
 
 export default function Play({ navigation }) {
   const {
@@ -194,9 +195,24 @@ export default function Play({ navigation }) {
         currentStep = 5;
         setAttackIncoming(5);
         attacked();
-        Vibration.vibrate(500);
+        handleVibrate();
       }
     }, 1000);
+  };
+
+  const handleVibrate = () => {
+    const options = {
+      enableVibrateFallback: true,
+      ignoreAndroidSystemSettings: false,
+    };
+    if (Platform.OS === 'ios') {
+      HapticFeedback.trigger('impactLight', options);
+    }
+    else {
+
+      Vibration.vibrate(500);
+    }
+    
   };
 
   return (
