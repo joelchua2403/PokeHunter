@@ -3,10 +3,18 @@ import { Button } from "react-native-paper";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import logo from "../assets/logo.png";
 import home from "../assets/home.png";
+import { Picker } from "@react-native-picker/picker";
+import BackgroundSettingsContext from "../Slider/BackgroundSettingsContext";
+import { useState, useEffect, useRef, useContext } from "react";
 
 const Tab = createBottomTabNavigator();
 
 export default function Home({ navigation }) {
+  // Slider state
+  const { backgroundValue, setBackgroundValue } = useContext(
+    BackgroundSettingsContext
+  );
+
   return (
     <View style={styles.container}>
       <ImageBackground source={home} style={{ width: "100%", height: "100%" }}>
@@ -24,6 +32,18 @@ export default function Home({ navigation }) {
           >
             <Text style={{ fontSize: 18 }}>PLAY</Text>
           </Button>
+
+          <Picker
+            selectedValue={backgroundValue}
+            style={{ height: 50, width: 300, marginBottom: 0, marginTop: 100 }}
+            onValueChange={(itemValue) => setBackgroundValue(itemValue)}
+          >
+            <Picker.Item label="Select Pokemon Type" value={""} />
+            <Picker.Item label="Random" value={""} />
+            <Picker.Item label="Fire" value={"fire"} />
+            <Picker.Item label="Grass" value={"grass"} />
+            <Picker.Item label="Ground" value={"ground"} />
+          </Picker>
         </View>
       </ImageBackground>
     </View>

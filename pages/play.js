@@ -17,6 +17,9 @@ import { Gyroscope } from "expo-sensors";
 import LandscapeScroll from "../components/LandscapeScroll";
 import { Accelerometer } from "expo-sensors";
 import punch from "../assets/punch.png";
+//Settings context
+import SliderContext from "../Slider/SliderContext.js";
+import BackgroundSettingsContext from "../Slider/BackgroundSettingsContext.js";
 
 export default function Play({ navigation }) {
   const {
@@ -44,15 +47,22 @@ export default function Play({ navigation }) {
     stopCountdown,
     attackIncoming,
     setAttackIncoming,
-    countdownIntervalRef
+    countdownIntervalRef,
+    findTypePokemon,
   } = useContext(ApiContext);
+
+  //Settings
+  // a. Gyroscope Sensitivity
+  //const { sliderValue } = useContext(SliderContext);
+  // b. Background and Pokemon Types
+  const { backgroundValue } = useContext(BackgroundSettingsContext);
 
   // const {
   //   handleGyroscopeData,
   //   onGyroKick,
   //   onGyroPunch,
   //   onGyroThrow,
-  // } = useContext(GyroContext);
+  // } = useContext(GyroContext);i
 
   const [{ x, y, z }, setData] = useState({
     x: 0,
@@ -80,21 +90,34 @@ export default function Play({ navigation }) {
   }, []);
 
   useEffect(() => {
-    fetch("https://pokeapi.co/api/v2/pokemon?limit=151")
+    let apiUrl;
+
+    // Check if backgroundValue prop is blank
+    if (!backgroundValue) {
+      apiUrl = "https://pokeapi.co/api/v2/pokemon?limit=151";
+    } else {
+      apiUrl = `https://pokeapi.co/api/v2/type/${backgroundValue}`;
+    }
+
+    console.log(apiUrl);
+    fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => {
-        setPokeData(data.results);
-        // Select a random Pokémon from the results
-        // const randomIndex = Math.floor(Math.random() * data.results.length);
-        // setSelectedPokemon(data.results[randomIndex]);
-
-        //   fetch(selectedPokemon.url)
-        //     .then((response) => response.json())
-        //     .then((data) => {
-        //       setPokemonImage(data.sprites.front_default);
-        //     });
+        if (!backgroundValue) {
+          setPokeData(data.results);
+          // Uncomment below if you want to select a random Pokémon
+          // const randomIndex = Math.floor(Math.random() * data.results.length);
+          // setSelectedPokemon(data.results[randomIndex]);
+        } else {
+          // Modify the data from the second API to match the structure of the first
+          const modifiedData = data.pokemon.map((entry) => ({
+            name: entry.pokemon.name,
+            url: entry.pokemon.url,
+          }));
+          setPokeData(modifiedData);
+        }
       });
-  }, []);
+  }, [backgroundValue]); // Add backgroundValue to the dependency array
 
   // useEffect(() => {
   //   if (pokemonHP > 0 && selectedPokemon && (x > 1 || x < -1)) {
@@ -149,20 +172,13 @@ export default function Play({ navigation }) {
 
   const [redHue, setRedHue] = useState(0);
 
-  
-
-
-
-
   const intervalRef = useRef();
-  
 
   const startCountdown = () => {
     setAttackIncoming(5);
     clearInterval(countdownIntervalRef.current);
     startCountdownInterval();
   };
-
 
   const attacked = () => {
     const animationDuration = 2000; // 2 seconds
@@ -225,9 +241,15 @@ export default function Play({ navigation }) {
         )}
       </View> */}
 
-      
-      <LandscapeScroll x ={x.toFixed(2)} name = {selectedPokemon.name} image = {pokemonImage} HP ={pokemonHP} selectedPokemon={selectedPokemon} pokemonLocation= {pokemonLocation} hue= {redHue}/>
-
+      <LandscapeScroll
+        x={x.toFixed(2)}
+        name={selectedPokemon.name}
+        image={pokemonImage}
+        HP={pokemonHP}
+        selectedPokemon={selectedPokemon}
+        pokemonLocation={pokemonLocation}
+        hue={redHue}
+      />
 
       <View style={styles.container}>
         <Button
@@ -235,7 +257,9 @@ export default function Play({ navigation }) {
           labelStyle={{ fontSize: 19 }}
           icon="paw"
           onPress={() => {
-            findPokemon();
+            //If Background is set, then it will not be random,
+            // If background is not set, pokemon generated will be random
+            backgroundValue === "" ? findPokemon() : findTypePokemon();
             movePokemon();
             startCountdown();
           }}

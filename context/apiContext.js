@@ -17,13 +17,13 @@ export const ApiProvider = ({ children }) => {
   const [pokemonImage, setPokemonImage] = useState(null);
   const [pokemonHP, setPokemonHP] = useState(0);
   const [isDefeated, setIsDefeated] = useState(false);
-    const [capturedPokemon, setCapturedPokemon] = useState([]);
- const [captured, setCaptured] = useState(false);
+  const [capturedPokemon, setCapturedPokemon] = useState([]);
+  const [captured, setCaptured] = useState(false);
   const [punchDetected, setPunchDetected] = useState(false);
   const [kickDetected, setKickDetected] = useState(false);
   const [throwDetected, setThrowDetected] = useState(false);
   const [captureDetected, setCaptureDetected] = useState(false);
-  const [attackIncoming, setAttackIncoming] =useState(5);
+  const [attackIncoming, setAttackIncoming] = useState(5);
 
   const countdownIntervalRef = useRef();
 
@@ -39,15 +39,14 @@ export const ApiProvider = ({ children }) => {
     const randomChance = Math.random(); // Generates a random number between 0 and 1
     setCaptureDetected(true);
     setTimeout(() => {
-        setCaptureDetected(false);
-        }
-        , 800);
+      setCaptureDetected(false);
+    }, 800);
     // If randomChance is less than or equal to the capture rate, then capture is successful
     if (randomChance <= captureRate) {
       setCapturedPokemon([...capturedPokemon, selectedPokemon]);
-        setCaptured(true);
-        setPokemonHP(100);
-        stopCountdown();
+      setCaptured(true);
+      setPokemonHP(100);
+      stopCountdown();
       Alert.alert("You have captured " + selectedPokemon.name + "!");
     } else {
       Alert.alert("Oh no! " + selectedPokemon.name + " escaped!");
@@ -69,9 +68,8 @@ export const ApiProvider = ({ children }) => {
     checkDefeat();
     setKickDetected(true);
     setTimeout(() => {
-        setKickDetected(false);
-        }
-        , 800);
+      setKickDetected(false);
+    }, 800);
   };
 
   const onPunch = () => {
@@ -79,8 +77,8 @@ export const ApiProvider = ({ children }) => {
     checkDefeat();
     setPunchDetected(true);
     setTimeout(() => {
-        setPunchDetected(false);
-        }, 800);
+      setPunchDetected(false);
+    }, 800);
   };
 
   const onThrow = () => {
@@ -88,9 +86,8 @@ export const ApiProvider = ({ children }) => {
     checkDefeat();
     setThrowDetected(true);
     setTimeout(() => {
-        setThrowDetected(false);
-        }
-        , 800);
+      setThrowDetected(false);
+    }, 800);
   };
 
   const findPokemon = () => {
@@ -110,10 +107,31 @@ export const ApiProvider = ({ children }) => {
     setCaptured(false);
   };
 
+  const findTypePokemon = () => {
+    // Ensure pokeData has data before proceeding
+    if (pokeData && pokeData.length > 0) {
+      // Select a random Pokémon from the results
+      const randomIndex = Math.floor(Math.random() * pokeData.length);
+      const selected = pokeData[randomIndex];
+      setSelectedPokemon(selected);
+
+      fetch(selected.url)
+        .then((response) => response.json())
+        .then((data) => {
+          setPokemonImage(data.sprites.front_default);
+        });
+
+      setPokemonHP(100);
+      setIsDefeated(false);
+    } else {
+      console.error("pokeData is empty or not loaded yet.");
+    }
+  };
+
   const stopCountdown = () => {
     setAttackIncoming(5);
     clearInterval(countdownIntervalRef.current);
-  }
+  };
 
   return (
     <ApiContext.Provider
@@ -146,6 +164,7 @@ export const ApiProvider = ({ children }) => {
         stopCountdown,
         countdownIntervalRef,
         captured,
+        findTypePokemon,
       }}
     >
       {children}
