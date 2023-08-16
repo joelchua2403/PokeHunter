@@ -27,8 +27,9 @@ const PokemonBattleScene = ({ onKick, onPunch, onThrow, capturePokemon}) => {
 const styles = StyleSheet.create({
   container: {
     marginTop: 20,
-    padding: 20,
-    backgroundColor: 'lightgrey',
+    padding: 15,
+    backgroundColor: 'burlywood',
+    borderRadius: 20,
   },
   row: {
     flexDirection: 'row',
