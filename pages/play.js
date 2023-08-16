@@ -189,7 +189,6 @@ export default function Play() {
       if (currentStep > 0){
         currentStep --;
         setAttackIncoming(currentStep);
-        console.log(currentStep);
       } else {
         currentStep = 5;
         setAttackIncoming(5);
