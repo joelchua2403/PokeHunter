@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import punch from "../assets/punch.png";
+import kick from "../assets/kick.png";
+import throwimg from "../assets/throwimg.png";
+import capture from "../assets/capture.png";
+import { useContext } from 'react';
+import { ApiContext } from '../context/apiContext';
 
 
 const scrollSpeed = 450
 export default function LandscapeScroll({x, name, image, HP, selectedPokemon, pokemonLocation, hue}) {
+
+  const {punchDetected, kickDetected, throwDetected, captureDetected} = useContext(ApiContext);
     
     return(
         <View style = {styles.battleContainer}>
@@ -15,6 +23,35 @@ export default function LandscapeScroll({x, name, image, HP, selectedPokemon, po
         {
           transform: [{ translateX: x * scrollSpeed / 2 }],
         }]}/>
+          { punchDetected && (
+              <Image 
+                  source={punch}
+                  style={[styles.punchImage, {transform: [{ translateX: pokemonLocation * scrollSpeed + x * scrollSpeed }, {translateY: 40}]}]}
+              />
+          )}
+
+          { kickDetected && (
+              <Image
+                  source={kick}
+                  style={[styles.punchImage, {transform: [{ translateX: pokemonLocation * scrollSpeed + x * scrollSpeed }, {translateY: 40}]}]}
+              />
+          )}
+
+          { throwDetected && (
+              <Image
+                  source={throwimg}
+                  style={[styles.punchImage, {transform: [{ translateX: pokemonLocation * scrollSpeed + x * scrollSpeed }, {translateY: 40}]}]}
+              />
+          )}
+
+          { captureDetected && (
+              <Image
+                  source={capture}
+                  style={[styles.punchImage, {transform: [{ translateX: pokemonLocation * scrollSpeed + x * scrollSpeed }, {translateY: 40}]}]}
+              />
+          )}
+
+          { }
 
         {(hue > 0)?<Text style={styles.pokemonName}>{name} Attacked you! </Text>: null}
         
@@ -92,5 +129,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'lightgrey',
       },
       pokemonStats:{
-      }
+      },
+      punchImage: {
+        width: 100,
+        height: 100,
+        resizeMode: 'contain',
+        position: 'absolute',
+        zIndex: 1,
+      },
   });

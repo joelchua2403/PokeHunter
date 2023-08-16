@@ -15,6 +15,7 @@ import { GyroContext } from "../context/gyroContext";
 import { Gyroscope } from "expo-sensors";
 import LandscapeScroll from "../components/LandscapeScroll";
 import { Accelerometer } from 'expo-sensors';
+import punch from "../assets/punch.png";
 
 export default function Play() {
   const {
@@ -113,12 +114,6 @@ export default function Play() {
     return () => _unsubscribe();
   }, []);
 
-  const onGyroPunch = () => {
-    if (pokemonHP > 0 && selectedPokemon && (x > 1 || x < -1)) {
-      setPokemonHP(pokemonHP - 10);
-      checkDefeat();
-    }
-  };
 
   const [pokemonLocation, setPokemonLocation] = useState(Math.random() * 1.6 - 0.8);
 
@@ -136,7 +131,9 @@ export default function Play() {
   const registerHit = () => {
     if (Math.abs(x + pokemonLocation) < 0.15){
       console.log("hit!");
-      movePokemon();
+      setTimeout(() => {
+      movePokemon()
+      }, 800);
       startCountdown();
       return (true);
     }else {
@@ -227,12 +224,8 @@ export default function Play() {
       <View style={styles.container}>
         <Button title="Find a Pokémon" onPress={()=>{findPokemon(); movePokemon(); startCountdown();}} />
         <View style={styles.buttonContainer}>
-
-        {x > 1 || x < -1 ? <Text style={styles.text}>Punch</Text> : null}
-      {y > 1 || y < -1 ? <Text style={styles.text}>Kick</Text> : null}
-      {z > 1 || z < -1 ? <Text style={styles.text}>Throw</Text> : null}
       </View>
-        <PokemonBattleScene onKick={()=> {if(registerHit()){onKick()}}} onPunch={onGyroPunch} onThrow={()=> {if(registerHit()){onThrow()}}} capturePokemon={()=> {if(registerHit()){capturePokemon()}}} />
+        <PokemonBattleScene onKick={()=> {if(registerHit()){onKick()}}} onPunch={()=> {if(registerHit()){onPunch()}}} onThrow={()=> {if(registerHit()){onThrow()}}} capturePokemon={()=> {if(registerHit()){capturePokemon()}}} />
         <Text>Gyroscope:</Text>
       <Text >x: {x}</Text>
       <Text >y: {y}</Text>
@@ -299,4 +292,9 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "lightgrey",
   },
+  punch: {
+    width: "30%",
+    height: "20%",
+    resizeMode: "center",
+    },
 });

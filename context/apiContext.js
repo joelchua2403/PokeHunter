@@ -17,6 +17,10 @@ export const ApiProvider = ({ children }) => {
   const [pokemonHP, setPokemonHP] = useState(0);
   const [isDefeated, setIsDefeated] = useState(false);
   const [capturedPokemon, setCapturedPokemon] = useState([]);
+  const [punchDetected, setPunchDetected] = useState(false);
+  const [kickDetected, setKickDetected] = useState(false);
+  const [throwDetected, setThrowDetected] = useState(false);
+  const [captureDetected, setCaptureDetected] = useState(false);
 
   const checkDefeat = () => {
     if (pokemonHP <= 5) {
@@ -28,7 +32,11 @@ export const ApiProvider = ({ children }) => {
     // Define the capture rate (e.g., 0.5 for 50% chance)
     const captureRate = 1 - pokemonHP / 100;
     const randomChance = Math.random(); // Generates a random number between 0 and 1
-
+    setCaptureDetected(true);
+    setTimeout(() => {
+        setCaptureDetected(false);
+        }
+        , 800);
     // If randomChance is less than or equal to the capture rate, then capture is successful
     if (randomChance <= captureRate) {
       setCapturedPokemon([...capturedPokemon, selectedPokemon]);
@@ -51,16 +59,30 @@ export const ApiProvider = ({ children }) => {
   const onKick = () => {
     setPokemonHP(pokemonHP - 20);
     checkDefeat();
+    setKickDetected(true);
+    setTimeout(() => {
+        setKickDetected(false);
+        }
+        , 800);
   };
 
   const onPunch = () => {
     setPokemonHP(pokemonHP - 10);
     checkDefeat();
+    setPunchDetected(true);
+    setTimeout(() => {
+        setPunchDetected(false);
+        }, 800);
   };
 
   const onThrow = () => {
     setPokemonHP(pokemonHP - 30);
     checkDefeat();
+    setThrowDetected(true);
+    setTimeout(() => {
+        setThrowDetected(false);
+        }
+        , 800);
   };
 
   const findPokemon = () => {
@@ -101,6 +123,10 @@ export const ApiProvider = ({ children }) => {
         capturedPokemon,
         setCapturedPokemon,
         capturePokemon,
+        punchDetected,
+        kickDetected,
+        throwDetected,
+        captureDetected,
       }}
     >
       {children}

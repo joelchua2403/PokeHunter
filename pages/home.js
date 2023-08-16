@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 
 import logo from "../assets/logo.png";
+import punch from "../assets/punch.png";
 
 export default function Home() {
   return (
@@ -20,4 +21,5 @@ const styles = StyleSheet.create({
     height: "40%",
     resizeMode: "contain",
   },
+ 
 });
