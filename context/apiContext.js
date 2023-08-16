@@ -106,7 +106,6 @@ export const ApiProvider = ({ children }) => {
     setIsDefeated(false);
     setCaptured(false);
   };
-
   const findTypePokemon = () => {
     // Ensure pokeData has data before proceeding
     if (pokeData && pokeData.length > 0) {
@@ -118,11 +117,20 @@ export const ApiProvider = ({ children }) => {
       fetch(selected.url)
         .then((response) => response.json())
         .then((data) => {
-          setPokemonImage(data.sprites.front_default);
+          // Check if the sprite is null or undefined
+          if (data.sprites && data.sprites.front_default) {
+            setPokemonImage(data.sprites.front_default);
+            console.log(selected);
+            setPokemonHP(100);
+            setIsDefeated(false);
+          } else {
+            // If sprite is null or undefined, select another Pokémon
+            findTypePokemon();
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching Pokémon details:", error);
         });
-
-      setPokemonHP(100);
-      setIsDefeated(false);
     } else {
       console.error("pokeData is empty or not loaded yet.");
     }

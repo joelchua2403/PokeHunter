@@ -114,6 +114,7 @@ export default function Play({ navigation }) {
             name: entry.pokemon.name,
             url: entry.pokemon.url,
           }));
+
           setPokeData(modifiedData);
         }
       });
