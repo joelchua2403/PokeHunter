@@ -24,11 +24,15 @@ export const ApiProvider = ({ children }) => {
   const [throwDetected, setThrowDetected] = useState(false);
   const [captureDetected, setCaptureDetected] = useState(false);
   const [attackIncoming, setAttackIncoming] = useState(5);
+  const [playerHealth, setPlayerHealth] =useState(3);
+  const [inventory, setInventory] = useState([1,2,3]);
 
   const countdownIntervalRef = useRef();
 
   const checkDefeat = () => {
     if (pokemonHP <= 5) {
+      newBerry();
+      stopCountdown();
       setIsDefeated(true);
     }
   };
@@ -141,6 +145,23 @@ export const ApiProvider = ({ children }) => {
     clearInterval(countdownIntervalRef.current);
   };
 
+  const damagePlayer = () => {
+    if (playerHealth > 0){
+      setPlayerHealth(health => (health -1))
+    }
+  };
+
+  const healPlayer = () => {
+    if (playerHealth < 3){
+      setPlayerHealth(health => (health +1))
+    }
+  }
+
+  const newBerry = () => {
+    const newBerry = Math.floor(Math.random() * 10) + 1;
+    setInventory(berries => [...berries, newBerry])
+  }
+
   return (
     <ApiContext.Provider
       value={{
@@ -173,6 +194,11 @@ export const ApiProvider = ({ children }) => {
         countdownIntervalRef,
         captured,
         findTypePokemon,
+        damagePlayer,
+        healPlayer,
+        newBerry,
+        playerHealth,
+        inventory,
       }}
     >
       {children}

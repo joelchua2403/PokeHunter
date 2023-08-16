@@ -49,6 +49,7 @@ export default function Play({ navigation }) {
     setAttackIncoming,
     countdownIntervalRef,
     findTypePokemon,
+    damagePlayer
   } = useContext(ApiContext);
 
   //Settings
@@ -211,25 +212,11 @@ export default function Play({ navigation }) {
         currentStep = 5;
         setAttackIncoming(5);
         attacked();
-        handleVibrate();
+        damagePlayer();
       }
     }, 1000);
   };
 
-  const handleVibrate = () => {
-    const options = {
-      enableVibrateFallback: true,
-      ignoreAndroidSystemSettings: false,
-    };
-    if (Platform.OS === 'ios') {
-      HapticFeedback.trigger('impactLight', options);
-    }
-    else {
-
-      Vibration.vibrate(500);
-    }
-    
-  };
 
   return (
     <View>
@@ -312,10 +299,10 @@ export default function Play({ navigation }) {
         >
           <Text style={{ fontSize: 15 }}>BACK TO HOME</Text>
         </Button>
-        <Text>Gyroscope:</Text>
+        {/* <Text>Gyroscope:</Text>
         <Text>x: {x}</Text>
         <Text>y: {y}</Text>
-        <Text>z: {z}</Text>
+        <Text>z: {z}</Text> */}
 
         <View>
           <TouchableOpacity

@@ -15,6 +15,7 @@ import BackgroundSettingsProvider from "./Slider/BackgroundSettingsProvider.js";
 import Icon from "react-native-vector-icons/Ionicons";
 import { GyroProvider } from "./context/gyroContext";
 import pokemon from "./assets/pokemon.jpeg";
+import Player from "./pages/Player";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -61,6 +62,16 @@ function PlayTabs() {
           headerStyle: {
             backgroundColor: "gainsboro",
           },
+          tabBarShowLabel: false,
+        }}
+      />
+      <Tab.Screen
+        name="Player"
+        component={Player}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="ios-happy" color={color} size={size} />
+          ),
           tabBarShowLabel: false,
         }}
       />

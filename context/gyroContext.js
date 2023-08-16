@@ -17,6 +17,7 @@ export const GyroProvider = ({ children }) => {
     onKick,
     onPunch,
     onThrow,
+    
   } = useContext(ApiContext);
 
   const onGyroPunch = () => {
