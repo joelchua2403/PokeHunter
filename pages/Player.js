@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
       padding: 10,
       borderRadius: 10,
       marginBottom: 10,
+      marginHorizontal: 10,
       flexDirection: 'row',
       alignItems: 'center',
     },
@@ -101,6 +102,7 @@ const styles = StyleSheet.create({
       // width: 120,
       // height: 220,
       alignSelf: 'center',
+      marginBottom: 20,
     },
     heartIcon: {
         width: 30,

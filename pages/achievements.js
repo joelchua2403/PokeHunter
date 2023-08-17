@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     justifyContent: "center",
     alignItems: "center",
-    height: 50,
+    height: 70,
     marginTop: 20,
     marginHorizontal: 15,
   },
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   glanceid: {
-    flex: 1,
+    flex: 0.8,
     fontSize: 25,
     width: 150,
     marginLeft: 10,
@@ -271,10 +271,11 @@ const styles = StyleSheet.create({
   glancename: {
     flex: 2,
     fontSize: 25,
+    marginRight: 10,
   },
   glanceimage: {
-    flex: 1,
-    height: "170%",
+    flex: 1.3,
+    height: "150%",
     marginBottom: 20,
   },
 });

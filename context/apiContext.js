@@ -30,7 +30,6 @@ export const ApiProvider = ({ children }) => {
 
   const countdownIntervalRef = useRef();
 
-
   const sound = require("../assets/sound.mp3");
   const captureSound = require("../assets/capturesound.wav");
   const soundObjectRef = useRef(new Audio.Sound());
@@ -96,12 +95,10 @@ export const ApiProvider = ({ children }) => {
     }
   }
 
-
-
   const checkDefeat = (currentHealth) => {
     if (currentHealth <= 5) {
       console.log("defeated!");
-      
+
       newBerry();
       stopCountdown();
       setIsDefeated(true);
@@ -200,10 +197,10 @@ export const ApiProvider = ({ children }) => {
           if (data.sprites && data.sprites.front_default) {
             setPokemonImage(data.sprites.front_default);
             console.log(selected);
-            setPokemonHP(100);
-            setIsDefeated(false);
-            setCaptured(false);
-            playSound();
+            // setPokemonHP(100);
+            // setIsDefeated(false);
+            // setCaptured(false);
+            // playSound();
           } else {
             // If sprite is null or undefined, select another Pokémon
             findTypePokemon();
@@ -212,6 +209,11 @@ export const ApiProvider = ({ children }) => {
         .catch((error) => {
           console.error("Error fetching Pokémon details:", error);
         });
+
+      setPokemonHP(100);
+      setIsDefeated(false);
+      setCaptured(false);
+      playSound();
     } else {
       console.error("pokeData is empty or not loaded yet.");
     }
@@ -235,15 +237,14 @@ export const ApiProvider = ({ children }) => {
   };
 
   const newBerry = () => {
-
     const newBerry = Math.floor(Math.random() * 20) + 1;
-    setInventory(berries => [...berries, newBerry])
-  }
+    setInventory((berries) => [...berries, newBerry]);
+  };
 
-  const deleteBerry= (n) => {
+  const deleteBerry = (n) => {
     const newBerries = inventory.filter((el, i) => i !== n);
     setInventory(newBerries);
-  }
+  };
 
   return (
     <ApiContext.Provider
