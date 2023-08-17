@@ -160,8 +160,13 @@ export const ApiProvider = ({ children }) => {
   }
 
   const newBerry = () => {
-    const newBerry = inventory.length + 1;
+    const newBerry = Math.floor(Math.random() * 20) + 1;
     setInventory(berries => [...berries, newBerry])
+  }
+
+  const deleteBerry= (n) => {
+    const newBerries = inventory.filter((el, i) => i !== n);
+    setInventory(newBerries);
   }
 
   return (
@@ -201,6 +206,7 @@ export const ApiProvider = ({ children }) => {
         newBerry,
         playerHealth,
         inventory,
+        deleteBerry,
       }}
     >
       {children}
