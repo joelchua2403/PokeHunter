@@ -4,7 +4,7 @@ import { useState, useEffect, useContext, useRef } from "react";
 import { StyleSheet, ScrollView, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 export default function Player({navigation}){
-    const {playerHealth, healPlayer, inventory} = useContext(ApiContext);
+    const {playerHealth, healPlayer, inventory, deleteBerry} = useContext(ApiContext);
     const [berries, setBerries] = useState([])
 
     const heartIcon = require('../assets/pngwingHeart.com.png'); 
@@ -21,10 +21,12 @@ export default function Player({navigation}){
                 berryDetalsTemp.push(newBerry)
             }
             setBerries(berryDetalsTemp);
+            console.log(berryDetalsTemp)
         };
-
+        
         fetchBerry();
-    }, [])
+    }, [inventory])
+
     return(
         <View style={styles.container}>
         <View style={styles.playerContainer}>
@@ -39,7 +41,7 @@ export default function Player({navigation}){
         <ScrollView contentContainerStyle={styles.scrollViewContent} keyboardShouldPersistTaps="handled">
           <View style={styles.tasksWrapper}>
             {berries.map((item, index) => (
-              <TouchableOpacity key={index} onPress={healPlayer}>
+              <TouchableOpacity key={index} onPress={()=> {healPlayer(); deleteBerry(index);}}>
                 <View style={styles.berryContainer}>
                   <Text style={styles.berryName}>{item.name.toUpperCase()}</Text>
                   <Image source={{ uri: item.image }} style={styles.berryImage} />
