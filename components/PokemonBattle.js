@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const PokemonBattleScene = ({ onKick, onPunch, onThrow, findPokemon}) => {
+const PokemonBattleScene = ({ onKick, onPunch, onThrow, capturePokemon}) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -16,8 +16,8 @@ const PokemonBattleScene = ({ onKick, onPunch, onThrow, findPokemon}) => {
         <TouchableOpacity style={styles.button} onPress={onThrow}>
           <Text style={styles.buttonText}>Throw</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={findPokemon}>
-          <Text style={styles.buttonText}>Run</Text>
+        <TouchableOpacity style={styles.button} onPress={capturePokemon}>
+          <Text style={styles.buttonText}>Capture</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -27,8 +27,9 @@ const PokemonBattleScene = ({ onKick, onPunch, onThrow, findPokemon}) => {
 const styles = StyleSheet.create({
   container: {
     marginTop: 20,
-    padding: 20,
-    backgroundColor: 'lightgrey',
+    padding: 15,
+    backgroundColor: 'burlywood',
+    borderRadius: 20,
   },
   row: {
     flexDirection: 'row',
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
   button: {
     padding: 10,
     marginBottom: 10,
-    backgroundColor: 'red',
+    backgroundColor: 'crimson',
     borderRadius: 5,
     width: '45%',
     alignItems: 'center',
