@@ -8,6 +8,7 @@ import {
   Alert,
 } from "react-native";
 import { useRef } from "react";
+import { Audio } from "expo-av";
 
 export const ApiContext = createContext();
 
@@ -24,17 +25,84 @@ export const ApiProvider = ({ children }) => {
   const [throwDetected, setThrowDetected] = useState(false);
   const [captureDetected, setCaptureDetected] = useState(false);
   const [attackIncoming, setAttackIncoming] = useState(5);
-  const [playerHealth, setPlayerHealth] =useState(3);
-  const [inventory, setInventory] = useState([1,2,3]);
+  const [playerHealth, setPlayerHealth] = useState(3);
+  const [inventory, setInventory] = useState([1, 2, 3]);
 
   const countdownIntervalRef = useRef();
+
+
+  const sound = require("../assets/sound.mp3");
+  const captureSound = require("../assets/capturesound.wav");
+  const soundObjectRef = useRef(new Audio.Sound());
+  const captureSoundObjectRef = useRef(new Audio.Sound());
+  const [isSoundLoaded, setIsSoundLoaded] = useState(false);
+
+  // Load sound on component mount
+  useEffect(() => {
+    async function loadSound() {
+      try {
+        await soundObjectRef.current.loadAsync(sound);
+        await captureSoundObjectRef.current.loadAsync(captureSound);
+
+        setIsSoundLoaded(true);
+      } catch (error) {
+        console.error("Error loading sound:", error);
+      }
+    }
+    loadSound();
+  }, []);
+
+  // Play/Stop sound based on conditions
+  useEffect(() => {
+    if (isSoundLoaded) {
+      // Only attempt to play or stop if sound is loaded
+      if (isDefeated || captured) {
+        playCaptureSound();
+        stopSound();
+      } else if (pokemonImage) {
+        playSound();
+      }
+    }
+  }, [isDefeated, captured, pokemonImage, isSoundLoaded]);
+
+  async function playSound() {
+    if (!isSoundLoaded) return; // Guard clause
+    try {
+      await soundObjectRef.current.setIsLoopingAsync(true);
+      await soundObjectRef.current.playAsync();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function stopSound() {
+    console.log("Stopping Sound");
+    if (!isSoundLoaded) return; // Guard clause
+    try {
+      await soundObjectRef.current.stopAsync();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function playCaptureSound() {
+    console.log("Capture Sound");
+    if (!isSoundLoaded) return; // Guard clause
+    try {
+      await captureSoundObjectRef.current.playAsync();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const checkDefeat = (currentHealth) => {
     if (currentHealth <= 5) {
       console.log("defeated!");
+      
       newBerry();
       stopCountdown();
       setIsDefeated(true);
+      stopSound();
     }
   };
 
@@ -46,10 +114,12 @@ export const ApiProvider = ({ children }) => {
     setTimeout(() => {
       setCaptureDetected(false);
     }, 800);
+    stopSound();
     // If randomChance is less than or equal to the capture rate, then capture is successful
     if (randomChance <= captureRate) {
       setCapturedPokemon([...capturedPokemon, selectedPokemon]);
       setCaptured(true);
+      playCaptureSound();
       setPokemonHP(100);
       stopCountdown();
       Alert.alert("You have captured " + selectedPokemon.name + "!");
@@ -110,6 +180,7 @@ export const ApiProvider = ({ children }) => {
     setPokemonHP(100);
     setIsDefeated(false);
     setCaptured(false);
+    playSound();
   };
   const findTypePokemon = () => {
     // Ensure pokeData has data before proceeding
@@ -129,6 +200,7 @@ export const ApiProvider = ({ children }) => {
             setPokemonHP(100);
             setIsDefeated(false);
             setCaptured(false);
+            playSound();
           } else {
             // If sprite is null or undefined, select another Pokémon
             findTypePokemon();
@@ -148,18 +220,19 @@ export const ApiProvider = ({ children }) => {
   };
 
   const damagePlayer = () => {
-    if (playerHealth > 0){
-      setPlayerHealth(health => (health -1))
+    if (playerHealth > 0) {
+      setPlayerHealth((health) => health - 1);
     }
   };
 
   const healPlayer = () => {
-    if (playerHealth < 3){
-      setPlayerHealth(health => (health +1))
+    if (playerHealth < 3) {
+      setPlayerHealth((health) => health + 1);
     }
-  }
+  };
 
   const newBerry = () => {
+
     const newBerry = Math.floor(Math.random() * 20) + 1;
     setInventory(berries => [...berries, newBerry])
   }
@@ -206,6 +279,7 @@ export const ApiProvider = ({ children }) => {
         newBerry,
         playerHealth,
         inventory,
+        stopSound,
         deleteBerry,
       }}
     >

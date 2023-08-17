@@ -62,6 +62,7 @@ function PlayTabs() {
           headerStyle: {
             backgroundColor: "gainsboro",
           },
+          headerTitleAlign: "center",
           tabBarShowLabel: false,
         }}
       />
@@ -72,16 +73,26 @@ function PlayTabs() {
           tabBarIcon: ({ color, size }) => (
             <Icon name="ios-happy" color={color} size={size} />
           ),
+          headerStyle: {
+            backgroundColor: "gainsboro",
+          },
+          headerTitleAlign: "center",
           tabBarShowLabel: false,
         }}
       />
       <Tab.Screen
-        name="PokeDex"
+        name="PokéDex"
         component={Achievements}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Icon name="book-outline" color={color} size={size} />
           ),
+          headerStyle: {
+            backgroundColor: "#cc0000",
+          },
+          headerTitleStyle: {
+            color: "white",
+          },
           tabBarShowLabel: false,
         }}
       />
@@ -100,48 +111,6 @@ export default function App() {
                 <Stack.Screen name="HomeTabs" component={HomeTabs} />
                 <Stack.Screen name="PlayTabs" component={PlayTabs} />
               </Stack.Navigator>
-              {/* <Tab.Navigator>
-              <Tab.Screen
-                name="Home"
-                component={Home}
-                options={{
-                  tabBarIcon: ({ color, size }) => (
-                    <Icon name="home-outline" color={color} size={size} />
-                  ),
-                }}
-              />
-              <Tab.Screen
-                name="Play"
-                component={Play}
-                options={{
-                  tabBarIcon: ({ color, size }) => (
-                    <Icon
-                      name="game-controller-outline"
-                      color={color}
-                      size={size}
-                    />
-                  ),
-                }}
-              />
-              <Tab.Screen
-                name="PokeDex"
-                component={Achievements}
-                options={{
-                  tabBarIcon: ({ color, size }) => (
-                    <Icon name="book-outline" color={color} size={size} />
-                  ),
-                }}
-              />
-              <Tab.Screen
-                name="Settings"
-                component={NotificationSettings}
-                options={{
-                  tabBarIcon: ({ color, size }) => (
-                    <Icon name="settings-outline" color={color} size={size} />
-                  ),
-                }}
-              />
-            </Tab.Navigator> */}
             </NavigationContainer>
           </GyroProvider>
         </SliderProvider>
