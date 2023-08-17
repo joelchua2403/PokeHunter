@@ -29,8 +29,9 @@ export const ApiProvider = ({ children }) => {
 
   const countdownIntervalRef = useRef();
 
-  const checkDefeat = () => {
-    if (pokemonHP <= 5) {
+  const checkDefeat = (currentHealth) => {
+    if (currentHealth <= 5) {
+      console.log("defeated!");
       newBerry();
       stopCountdown();
       setIsDefeated(true);
@@ -69,7 +70,7 @@ export const ApiProvider = ({ children }) => {
 
   const onKick = () => {
     setPokemonHP(pokemonHP - 20);
-    checkDefeat();
+    checkDefeat(pokemonHP - 20);
     setKickDetected(true);
     setTimeout(() => {
       setKickDetected(false);
@@ -78,7 +79,7 @@ export const ApiProvider = ({ children }) => {
 
   const onPunch = () => {
     setPokemonHP(pokemonHP - 10);
-    checkDefeat();
+    checkDefeat(pokemonHP - 10);
     setPunchDetected(true);
     setTimeout(() => {
       setPunchDetected(false);
@@ -87,7 +88,7 @@ export const ApiProvider = ({ children }) => {
 
   const onThrow = () => {
     setPokemonHP(pokemonHP - 30);
-    checkDefeat();
+    checkDefeat(pokemonHP - 30);
     setThrowDetected(true);
     setTimeout(() => {
       setThrowDetected(false);
