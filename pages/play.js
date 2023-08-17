@@ -20,6 +20,9 @@ import punch from "../assets/punch.png";
 import HapticFeedback from 'react-native-haptic-feedback';
 import SliderContext from "../Slider/SliderContext.js";
 import BackgroundSettingsContext from "../Slider/BackgroundSettingsContext.js";
+// for sound
+import { Audio } from 'expo-av';
+
 
 export default function Play({ navigation }) {
   const {
@@ -49,21 +52,17 @@ export default function Play({ navigation }) {
     setAttackIncoming,
     countdownIntervalRef,
     findTypePokemon,
-    damagePlayer
+    damagePlayer,
+    playSound,
+   
   } = useContext(ApiContext);
 
-  //Settings
-  // a. Gyroscope Sensitivity
-  //const { sliderValue } = useContext(SliderContext);
-  // b. Background and Pokemon Types
+
+  
+
+  
   const { backgroundValue } = useContext(BackgroundSettingsContext);
 
-  // const {
-  //   handleGyroscopeData,
-  //   onGyroKick,
-  //   onGyroPunch,
-  //   onGyroThrow,
-  // } = useContext(GyroContext);i
 
   const [{ x, y, z }, setData] = useState({
     x: 0,
@@ -121,20 +120,6 @@ export default function Play({ navigation }) {
       });
   }, [backgroundValue]); // Add backgroundValue to the dependency array
 
-  // useEffect(() => {
-  //   if (pokemonHP > 0 && selectedPokemon && (x > 1 || x < -1)) {
-  //     setPokemonHP(pokemonHP - 10);
-  //     checkDefeat();
-  //   }
-  //   if (pokemonHP > 0 && selectedPokemon && (y > 1 || y < -1)) {
-  //     setPokemonHP(pokemonHP - 20);
-  //     checkDefeat();
-  //   }
-  //   if (pokemonHP > 0 && selectedPokemon && (z > 1 || z < -1)) {
-  //     setPokemonHP(pokemonHP - 30);
-  //     checkDefeat();
-  //   }
-  // }, [x, y, z]); // Add
 
   useEffect(() => {
     _subscribe();
@@ -220,8 +205,6 @@ export default function Play({ navigation }) {
 
   return (
     <View>
-
-
       <LandscapeScroll
         x={x.toFixed(2)}
         name={selectedPokemon.name}
@@ -231,7 +214,6 @@ export default function Play({ navigation }) {
         pokemonLocation={pokemonLocation}
         hue={redHue}
       />
-
       <View style={styles.container}>
         <Button
           buttonColor="darkkhaki"
@@ -278,6 +260,7 @@ export default function Play({ navigation }) {
         >
           <Text style={{ fontSize: 15 }}>BACK TO HOME</Text>
         </Button>
+      
       
 
      </View>

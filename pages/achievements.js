@@ -14,6 +14,8 @@ import { useContext } from "react";
 import { ApiContext } from "../context/apiContext";
 import { createStackNavigator } from "@react-navigation/stack";
 import pokedex from "../assets/pokedex.png";
+import pokedexball from "../assets/pokedexball.png";
+import pokedexbackground from "../assets/pokedexbackground.png";
 
 const Stack = createStackNavigator();
 
@@ -30,7 +32,7 @@ function PokedexGlancePanel({ navigation, id, pokemonList }) {
     <Pressable
       style={({ pressed }) => [
         {
-          backgroundColor: pressed ? "#87cefa" : "rgba(255,255,255,0.5)",
+          backgroundColor: pressed ? "#87cefa" : "rgba(224,224,224,0.8)",
         },
         styles.glancepanel,
       ]}
@@ -82,20 +84,26 @@ function PokedexGlanceScreen({ navigation }) {
 
   return (
     <View style={styles.glancescreen}>
-      <ImageBackground
-        source={pokedex}
-        style={{ width: "100%", height: "100%" }}
-      >
-        <FlatList
-          data={pokemonList}
-          renderItem={({ index }) => (
-            <PokedexGlancePanel
-              id={index}
-              navigation={navigation}
-              pokemonList={pokemonList}
-            />
-          )}
-        />
+      <ImageBackground source={pokedexbackground} imageStyle={{ opacity: 0.7 }}>
+        <ImageBackground
+          source={pokedexball}
+          style={{
+            width: "100%",
+            height: "100%",
+          }}
+          imageStyle={{ opacity: 0.5 }}
+        >
+          <FlatList
+            data={pokemonList}
+            renderItem={({ index }) => (
+              <PokedexGlancePanel
+                id={index}
+                navigation={navigation}
+                pokemonList={pokemonList}
+              />
+            )}
+          />
+        </ImageBackground>
       </ImageBackground>
     </View>
   );
@@ -112,34 +120,50 @@ function PokemonDetailScreen({ route }) {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={pokemonList}
-        initialScrollIndex={id}
-        keyExtractor={(item, index) => index.toString()}
-        getItemLayout={getItemLayout}
-        renderItem={({ item, index }) => (
-          <View style={[styles.pokemonItem, { width, height }]}>
-            <View style={styles.header}>
-              {index < 9 ? (
-                <Text style={styles.text}>00{index + 1} </Text>
-              ) : (
-                <Text style={styles.text}>0{index + 1} </Text>
-              )}
-              <Text style={styles.text}>{item.name.toUpperCase()}</Text>
-            </View>
-            <Image source={{ uri: item.image }} style={styles.pokemonImage} />
-            <View style={styles.detailsContainer}>
-              <Text style={styles.details}>Types: {item.types}</Text>
-              <Text style={styles.details}>Abilities: {item.abilities}</Text>
-              <Text style={styles.details}>Height: {item.height}</Text>
-              <Text style={styles.details}>Weight: {item.weight}</Text>
-            </View>
-          </View>
-        )}
-        horizontal // Enable horizontal scrolling
-        pagingEnabled // Snap to full width
-        showsHorizontalScrollIndicator={false} // Hide scroll indicator
-      />
+      <ImageBackground source={pokedexbackground} imageStyle={{ opacity: 0.7 }}>
+        <ImageBackground
+          source={pokedexball}
+          style={{
+            width: "100%",
+            height: "100%",
+          }}
+          imageStyle={{ opacity: 0.5 }}
+        >
+          <FlatList
+            data={pokemonList}
+            initialScrollIndex={id}
+            keyExtractor={(item, index) => index.toString()}
+            getItemLayout={getItemLayout}
+            renderItem={({ item, index }) => (
+              <View style={[styles.pokemonItem, { width, height }]}>
+                <View style={styles.header}>
+                  {index < 9 ? (
+                    <Text style={styles.text}>00{index + 1} </Text>
+                  ) : (
+                    <Text style={styles.text}>0{index + 1} </Text>
+                  )}
+                  <Text style={styles.text}>{item.name.toUpperCase()}</Text>
+                </View>
+                <Image
+                  source={{ uri: item.image }}
+                  style={styles.pokemonImage}
+                />
+                <View style={styles.detailsContainer}>
+                  <Text style={styles.details}>Types: {item.types}</Text>
+                  <Text style={styles.details}>
+                    Abilities: {item.abilities}
+                  </Text>
+                  <Text style={styles.details}>Height: {item.height}</Text>
+                  <Text style={styles.details}>Weight: {item.weight}</Text>
+                </View>
+              </View>
+            )}
+            horizontal // Enable horizontal scrolling
+            pagingEnabled // Snap to full width
+            showsHorizontalScrollIndicator={false} // Hide scroll indicator
+          />
+        </ImageBackground>
+      </ImageBackground>
     </View>
   );
 }
@@ -151,79 +175,27 @@ export default function Achievements() {
         name="Caught Pokémon"
         component={PokedexGlanceScreen}
         options={{
-          headerLeft: null,
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name="Detail"
         component={PokemonDetailScreen}
         options={{
-          headerShown: true,
           navigationOptions: {
             header: ({ goBack }) => ({
               left: <Left onPress={goBack} />,
             }),
           },
+          headerStyle: {
+            backgroundColor: "indianred",
+          },
+          headerTintColor: "white",
         }}
       />
     </Stack.Navigator>
   );
 }
-
-// export default function Achievements() {
-//   const { capturedPokemon } = useContext(ApiContext);
-//   const { width, height } = Dimensions.get("window"); // Get the screen dimensions
-//   const [pokemonWithDetails, setPokemonWithDetails] = useState([]);
-
-//   useEffect(() => {
-//     const fetchDetails = async () => {
-//       const pokemonWithDetailsTemp = [];
-//       for (const pokemon of capturedPokemon) {
-//         const response = await fetch(pokemon.url);
-//         const data = await response.json();
-//         pokemonWithDetailsTemp.push({
-//           name: pokemon.name,
-//           image: data.sprites.front_default,
-//           types: data.types.map((t) => t.type.name).join(", "),
-//           abilities: data.abilities.map((a) => a.ability.name).join(", "),
-//           height: data.height,
-//           weight: data.weight,
-//         });
-//       }
-//       setPokemonWithDetails(pokemonWithDetailsTemp);
-//     };
-
-//     fetchDetails();
-//   }, [capturedPokemon]);
-
-//   return (
-//     <View style={styles.container}>
-//       <FlatList
-//         data={pokemonWithDetails}
-//         keyExtractor={(item, index) => index.toString()}
-//         renderItem={({ item, index }) => (
-//           <View style={[styles.pokemonItem, { width, height }]}>
-//             <View style={styles.header}>
-//               <Text style={styles.text}>
-//                 {index + 1}. {item.name.toUpperCase()}
-//               </Text>
-//             </View>
-//             <Image source={{ uri: item.image }} style={styles.pokemonImage} />
-//             <View style={styles.detailsContainer}>
-//               <Text style={styles.details}>Types: {item.types}</Text>
-//               <Text style={styles.details}>Abilities: {item.abilities}</Text>
-//               <Text style={styles.details}>Height: {item.height}</Text>
-//               <Text style={styles.details}>Weight: {item.weight}</Text>
-//             </View>
-//           </View>
-//         )}
-//         horizontal // Enable horizontal scrolling
-//         pagingEnabled // Snap to full width
-//         showsHorizontalScrollIndicator={false} // Hide scroll indicator
-//       />
-//     </View>
-//   );
-// }
 
 const styles = StyleSheet.create({
   container: {
@@ -232,7 +204,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    backgroundColor: "#cc0000",
+    backgroundColor: "rgba(204,0,0,0.8)",
     padding: 10,
     alignItems: "center",
   },
@@ -255,7 +227,12 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     backgroundColor: "#ffffff",
-    borderRadius: 10,
+    borderRadius: 20,
+    borderTopWidth: 5,
+    borderBottomWidth: 5,
+    borderLeftWidth: 20,
+    borderRightWidth: 20,
+    borderColor: "rgba(204,0,0,0.8)",
     padding: 16,
     marginTop: 16,
     shadowColor: "#000",
@@ -278,7 +255,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 50,
-    margin: 10,
+    marginTop: 20,
+    marginHorizontal: 15,
   },
   glancescreen: {
     flex: 1,
