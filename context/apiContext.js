@@ -86,14 +86,17 @@ export const ApiProvider = ({ children }) => {
   }
 
   async function playCaptureSound() {
-    console.log("Capture Sound");
+    console.log(isSoundLoaded);
     if (!isSoundLoaded) return; // Guard clause
     try {
+      await captureSoundObjectRef.current.setPositionAsync(0);
       await captureSoundObjectRef.current.playAsync();
     } catch (error) {
       console.log(error);
     }
   }
+
+
 
   const checkDefeat = (currentHealth) => {
     if (currentHealth <= 5) {
