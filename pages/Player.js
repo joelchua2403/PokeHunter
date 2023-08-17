@@ -28,7 +28,7 @@ export default function Player({navigation}){
     return(
         <View style={styles.container}>
         <View style={styles.playerContainer}>
-            <Text style={styles.playerHealth}> HEALTH:
+            <Text style={styles.playerHealth}> 
             {Array.from({ length: playerHealth }).map((_, index) => (
             <Image key={index} source={heartIcon} style={styles.heartIcon} />
           ))}
