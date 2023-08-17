@@ -8,6 +8,8 @@ import {
   Alert,
 } from "react-native";
 import { useRef } from "react";
+import { Audio } from "expo-av";
+
 
 export const ApiContext = createContext();
 
@@ -29,11 +31,64 @@ export const ApiProvider = ({ children }) => {
 
   const countdownIntervalRef = useRef();
 
+  const sound = require('../assets/sound.mp3');
+  const soundObjectRef = useRef(new Audio.Sound());
+  const [isSoundLoaded, setIsSoundLoaded] = useState(false);
+  
+  // Load sound on component mount
+  useEffect(() => {
+      async function loadSound() {
+          try {
+              await soundObjectRef.current.loadAsync(sound);
+              setIsSoundLoaded(true);
+          } catch (error) {
+              console.error("Error loading sound:", error);
+          }
+      }
+      loadSound();
+  }, []);
+  
+  // Play/Stop sound based on conditions
+  useEffect(() => {
+      if (isSoundLoaded) { // Only attempt to play or stop if sound is loaded
+          if (isDefeated || captured) {
+              stopSound();
+          } else if (pokemonImage) {
+              playSound();
+          }
+      }
+  }, [isDefeated, captured, pokemonImage, isSoundLoaded]);
+
+  
+  
+  async function playSound() {
+      if (!isSoundLoaded) return; // Guard clause
+      try {
+          await soundObjectRef.current.setIsLoopingAsync(true);
+          await soundObjectRef.current.playAsync();
+      } catch (error) {
+          console.log(error);
+      }
+  }
+  
+  async function stopSound() {
+      console.log('Stopping Sound');
+      if (!isSoundLoaded) return; // Guard clause
+      try {
+          await soundObjectRef.current.stopAsync();
+      } catch (error) {
+            console.log(error);
+        }
+    }
+  
+  
+
   const checkDefeat = () => {
     if (pokemonHP <= 5) {
       newBerry();
       stopCountdown();
       setIsDefeated(true);
+      stopSound();
     }
   };
 
@@ -45,6 +100,7 @@ export const ApiProvider = ({ children }) => {
     setTimeout(() => {
       setCaptureDetected(false);
     }, 800);
+    stopSound();
     // If randomChance is less than or equal to the capture rate, then capture is successful
     if (randomChance <= captureRate) {
       setCapturedPokemon([...capturedPokemon, selectedPokemon]);
@@ -109,6 +165,7 @@ export const ApiProvider = ({ children }) => {
     setPokemonHP(100);
     setIsDefeated(false);
     setCaptured(false);
+    playSound();
   };
   const findTypePokemon = () => {
     // Ensure pokeData has data before proceeding
@@ -128,6 +185,7 @@ export const ApiProvider = ({ children }) => {
             setPokemonHP(100);
             setIsDefeated(false);
             setCaptured(false);
+            playSound();
           } else {
             // If sprite is null or undefined, select another Pokémon
             findTypePokemon();
@@ -200,6 +258,7 @@ export const ApiProvider = ({ children }) => {
         newBerry,
         playerHealth,
         inventory,
+        stopSound
       }}
     >
       {children}
