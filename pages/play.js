@@ -299,31 +299,9 @@ export default function Play({ navigation }) {
         >
           <Text style={{ fontSize: 15 }}>BACK TO HOME</Text>
         </Button>
-        {/* <Text>Gyroscope:</Text>
-        <Text>x: {x}</Text>
-        <Text>y: {y}</Text>
-        <Text>z: {z}</Text> */}
+      
 
-        <View>
-          <TouchableOpacity
-            onPress={subscription ? _unsubscribe : _subscribe}
-            style={styles.button}
-          >
-            <Text>{subscription ? "On" : "Off"}</Text>
-          </TouchableOpacity>
-          <Button onPress={_slow} title="slow" />
-        </View>
-
-        <View>
-          <TouchableOpacity
-            onPress={subscription ? _unsubscribe : _subscribe}
-            style={styles.button}
-          >
-            <Text>{subscription ? "On" : "Off"}</Text>
-          </TouchableOpacity>
-          <Button onPress={_slow} title="slow" />
-        </View>
-      </View>
+     </View>
     </View>
   );
 }
