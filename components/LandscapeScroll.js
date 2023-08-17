@@ -33,9 +33,18 @@ export default function LandscapeScroll({
     throwDetected,
     captureDetected,
     captured,
+    stopCountdown,
   } = useContext(ApiContext);
 
   const { backgroundValue } = useContext(BackgroundSettingsContext);
+
+  // To stop the countdown when the pokemon is defeated
+  useEffect(() => {
+    if (name && HP <= 0) {
+      stopCountdown();
+    }
+  }, [name, HP]);
+
 
   let backgroundSource, foregroundSource;
 

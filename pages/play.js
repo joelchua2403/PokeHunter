@@ -220,28 +220,7 @@ export default function Play({ navigation }) {
 
   return (
     <View>
-      {/* <View>
-        <Image source={background} style={styles.background} />
-        {pokemonImage && selectedPokemon ? (
-          <View style={styles.pokemonContainer}>
-            <LandscapeScroll x ={x}/>
-            <Text style={styles.pokemonName}>{selectedPokemon.name}</Text>
-            <Image
-              source={{ uri: pokemonImage }}
-              style={{ width: 200, height: 200 }}
-            />
 
-            {pokemonHP > 0 && selectedPokemon ? (
-              <Text style={styles.pokemonHP}>HP: {pokemonHP}</Text>
-            ) : null}
-            {selectedPokemon.name && pokemonHP <= 0 && (
-              <Text>You have defeated {selectedPokemon.name}!</Text>
-            )}
-          </View>
-        ) : (
-          <Image source={background} style={styles.background} />
-        )}
-      </View> */}
 
       <LandscapeScroll
         x={x.toFixed(2)}
