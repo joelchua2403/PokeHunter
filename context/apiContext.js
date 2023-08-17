@@ -30,6 +30,7 @@ export const ApiProvider = ({ children }) => {
 
   const countdownIntervalRef = useRef();
 
+
   const sound = require("../assets/sound.mp3");
   const captureSound = require("../assets/capturesound.wav");
   const soundObjectRef = useRef(new Audio.Sound());
@@ -94,8 +95,10 @@ export const ApiProvider = ({ children }) => {
     }
   }
 
-  const checkDefeat = () => {
-    if (pokemonHP <= 5) {
+  const checkDefeat = (currentHealth) => {
+    if (currentHealth <= 5) {
+      console.log("defeated!");
+      
       newBerry();
       stopCountdown();
       setIsDefeated(true);
@@ -137,7 +140,7 @@ export const ApiProvider = ({ children }) => {
 
   const onKick = () => {
     setPokemonHP(pokemonHP - 20);
-    checkDefeat();
+    checkDefeat(pokemonHP - 20);
     setKickDetected(true);
     setTimeout(() => {
       setKickDetected(false);
@@ -146,7 +149,7 @@ export const ApiProvider = ({ children }) => {
 
   const onPunch = () => {
     setPokemonHP(pokemonHP - 10);
-    checkDefeat();
+    checkDefeat(pokemonHP - 10);
     setPunchDetected(true);
     setTimeout(() => {
       setPunchDetected(false);
@@ -155,7 +158,7 @@ export const ApiProvider = ({ children }) => {
 
   const onThrow = () => {
     setPokemonHP(pokemonHP - 30);
-    checkDefeat();
+    checkDefeat(pokemonHP - 30);
     setThrowDetected(true);
     setTimeout(() => {
       setThrowDetected(false);
@@ -229,9 +232,15 @@ export const ApiProvider = ({ children }) => {
   };
 
   const newBerry = () => {
-    const newBerry = inventory.length + 1;
-    setInventory((berries) => [...berries, newBerry]);
-  };
+
+    const newBerry = Math.floor(Math.random() * 20) + 1;
+    setInventory(berries => [...berries, newBerry])
+  }
+
+  const deleteBerry= (n) => {
+    const newBerries = inventory.filter((el, i) => i !== n);
+    setInventory(newBerries);
+  }
 
   return (
     <ApiContext.Provider
@@ -271,6 +280,7 @@ export const ApiProvider = ({ children }) => {
         playerHealth,
         inventory,
         stopSound,
+        deleteBerry,
       }}
     >
       {children}
