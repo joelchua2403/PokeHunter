@@ -62,6 +62,7 @@ function PlayTabs() {
           headerStyle: {
             backgroundColor: "gainsboro",
           },
+          headerTitleAlign: "center",
           tabBarShowLabel: false,
         }}
       />
@@ -72,16 +73,26 @@ function PlayTabs() {
           tabBarIcon: ({ color, size }) => (
             <Icon name="ios-happy" color={color} size={size} />
           ),
+          headerStyle: {
+            backgroundColor: "gainsboro",
+          },
+          headerTitleAlign: "center",
           tabBarShowLabel: false,
         }}
       />
       <Tab.Screen
-        name="PokeDex"
+        name="PokéDex"
         component={Achievements}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Icon name="book-outline" color={color} size={size} />
           ),
+          headerStyle: {
+            backgroundColor: "#cc0000",
+          },
+          headerTitleStyle: {
+            color: "white",
+          },
           tabBarShowLabel: false,
         }}
       />

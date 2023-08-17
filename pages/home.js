@@ -38,7 +38,7 @@ export default function Home({ navigation }) {
             style={{ height: 50, width: 300, marginBottom: 0, marginTop: 100 }}
             onValueChange={(itemValue) => setBackgroundValue(itemValue)}
           >
-            <Picker.Item label="Select Pokemon Type" value={""} />
+            <Picker.Item label="Select Pokémon Type" value={""} />
             <Picker.Item label="Random" value={""} />
             <Picker.Item label="Fire" value={"fire"} />
             <Picker.Item label="Grass" value={"grass"} />

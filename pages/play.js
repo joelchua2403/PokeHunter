@@ -53,6 +53,7 @@ export default function Play({ navigation }) {
     countdownIntervalRef,
     findTypePokemon,
     damagePlayer,
+    playSound,
    
   } = useContext(ApiContext);
 
