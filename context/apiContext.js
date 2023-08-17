@@ -158,7 +158,7 @@ export const ApiProvider = ({ children }) => {
   }
 
   const newBerry = () => {
-    const newBerry = Math.floor(Math.random() * 10) + 1;
+    const newBerry = inventory.length + 1;
     setInventory(berries => [...berries, newBerry])
   }
 

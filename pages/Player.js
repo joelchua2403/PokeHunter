@@ -28,10 +28,10 @@ export default function Player({navigation}){
     return(
         <View style={styles.container}>
         <View style={styles.playerContainer}>
-            <Text style={styles.playerHealth}> 
+            <Text style={styles.playerHealth}> |
             {Array.from({ length: playerHealth }).map((_, index) => (
             <Image key={index} source={heartIcon} style={styles.heartIcon} />
-          ))}
+          ))}|
           </Text>
         </View>
         <Image source={playerIcon} style={styles.PlayerImage} />
@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
     playerHealth: {
       fontSize: 18,
       fontWeight: 'bold',
+      padding: 10,
     },
     scrollViewContent: {
       flexGrow: 1,
@@ -97,5 +98,6 @@ const styles = StyleSheet.create({
     heartIcon: {
         width: 30,
         height: 30,
+        resizeMode: 'cover'
     },
   });
