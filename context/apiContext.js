@@ -128,6 +128,7 @@ export const ApiProvider = ({ children }) => {
             console.log(selected);
             setPokemonHP(100);
             setIsDefeated(false);
+            setCaptured(false);
           } else {
             // If sprite is null or undefined, select another Pokémon
             findTypePokemon();
