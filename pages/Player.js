@@ -8,6 +8,7 @@ export default function Player({navigation}){
     const [berries, setBerries] = useState([])
 
     const heartIcon = require('../assets/pngwingHeart.com.png'); 
+    const playerIcon = require('../assets/PlayerSprite.png')
 
     useEffect(()=> {
         const fetchBerry = async()=> {
@@ -33,6 +34,8 @@ export default function Player({navigation}){
           ))}
           </Text>
         </View>
+        <Image source={playerIcon} style={styles.PlayerImage} />
+
         <ScrollView contentContainerStyle={styles.scrollViewContent} keyboardShouldPersistTaps="handled">
           <View style={styles.tasksWrapper}>
             {berries.map((item, index) => (
@@ -85,6 +88,11 @@ const styles = StyleSheet.create({
       width: 80,
       height: 80,
       borderRadius: 40,
+    },
+    PlayerImage: {
+      width: 120,
+      height: 220,
+      alignSelf: 'center',
     },
     heartIcon: {
         width: 30,
