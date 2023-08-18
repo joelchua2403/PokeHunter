@@ -68,7 +68,7 @@ export default function NotificationSettings({ navigation }) {
   }, []);
 
   const handleNotificationTap = (response) => {
-    navigation.navigate("Play");
+    navigation.navigate("PlayTabs");
   };
 
   useEffect(() => {
